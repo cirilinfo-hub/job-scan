@@ -1,0 +1,21 @@
+import { Router } from 'express';
+import { requireAuth } from '../middlewares/auth';
+import { validateBody } from '../middlewares/common';
+import * as t from '../services/tracker.service';
+import { currentUser, idParam, ok, created } from '../utils/http';
+
+const s = t.trackerService;
+export const trackerRoutes = Router();
+trackerRoutes.use(requireAuth);
+trackerRoutes.get('/', async (req, res) => ok(res, await s.board(currentUser(req).id)));
+trackerRoutes.post('/', validateBody(t.createAppSchema), async (req, res) => created(res, await s.create(currentUser(req).id, req.body)));
+trackerRoutes.post('/from-job', validateBody(t.fromJobSchema), async (req, res) => created(res, await s.createFromJob(currentUser(req).id, req.body.jobId, req.body.resumeVersionId)));
+trackerRoutes.get('/:id', async (req, res) => ok(res, await s.get(currentUser(req).id, idParam(req))));
+trackerRoutes.put('/:id', validateBody(t.updateAppSchema), async (req, res) => ok(res, await s.update(currentUser(req).id, idParam(req), req.body)));
+trackerRoutes.delete('/:id', async (req, res) => { await s.remove(currentUser(req).id, idParam(req)); ok(res, { deleted: true }); });
+trackerRoutes.post('/:id/move', validateBody(t.moveSchema), async (req, res) => ok(res, await s.move(currentUser(req).id, idParam(req), req.body.status, req.body.index)));
+trackerRoutes.post('/:id/notes', validateBody(t.noteSchema), async (req, res) => created(res, await s.addNote(currentUser(req).id, idParam(req), req.body.body)));
+trackerRoutes.delete('/:id/notes/:noteId', async (req, res) => { await s.removeNote(currentUser(req).id, idParam(req), idParam(req, 'noteId')); ok(res, { deleted: true }); });
+trackerRoutes.post('/:id/interviews', validateBody(t.interviewSchema), async (req, res) => created(res, await s.addInterview(currentUser(req).id, idParam(req), req.body)));
+trackerRoutes.put('/:id/interviews/:interviewId', validateBody(t.interviewSchema), async (req, res) => ok(res, await s.updateInterview(currentUser(req).id, idParam(req), idParam(req, 'interviewId'), req.body)));
+trackerRoutes.delete('/:id/interviews/:interviewId', async (req, res) => { await s.removeInterview(currentUser(req).id, idParam(req), idParam(req, 'interviewId')); ok(res, { deleted: true }); });
