@@ -20,17 +20,17 @@ interface Payload {
     <div class="page-head"><div><h1>LinkedIn optimizer</h1><p>Paste your profile sections here. We never connect to or read your LinkedIn account.</p></div></div>
     <div class="grid split-even">
       <form class="card" [formGroup]="form" (ngSubmit)="analyze()">
-        <h2 style="margin-bottom:12px">Your profile</h2>
+        <h2 class="mb-3">Your profile</h2>
         <mat-form-field appearance="outline"><mat-label>Headline</mat-label><input matInput formControlName="headline" /></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>About</mat-label><textarea matInput rows="5" formControlName="about"></textarea></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>Experience</mat-label><textarea matInput rows="6" formControlName="experience"></textarea></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>Skills</mat-label><textarea matInput rows="2" formControlName="skills"></textarea><mat-hint>Separate with commas</mat-hint></mat-form-field>
-        <div class="form-grid" style="margin-top:8px">
+        <div class="form-grid mt-2">
           <mat-form-field appearance="outline"><mat-label>Certifications</mat-label><textarea matInput rows="2" formControlName="certifications"></textarea></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Education</mat-label><textarea matInput rows="2" formControlName="education"></textarea></mat-form-field>
         </div>
         <mat-form-field appearance="outline"><mat-label>Featured items</mat-label><textarea matInput rows="2" formControlName="featured"></textarea></mat-form-field>
-        <h2 style="margin:8px 0 12px">Target role</h2>
+        <h2 class="mt-2 mb-3">Target role</h2>
         <mat-form-field appearance="outline"><mat-label>Target job title</mat-label><input matInput formControlName="targetTitle" /></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>Target job description</mat-label><textarea matInput rows="6" formControlName="targetDescription"></textarea></mat-form-field>
         <button mat-flat-button type="submit" [disabled]="busy()">{{ busy() ? 'Analyzing...' : 'Analyze profile' }}</button>
@@ -39,14 +39,14 @@ interface Payload {
       <div class="stack">
         @if (a(); as a) {
           <section class="card stack">
-            <div class="row" style="gap:16px; flex-wrap:nowrap"><app-score [value]="a.score" [size]="72" label="Profile completeness" /><div><h2>Profile checklist</h2><p class="muted small">{{ a.report.note }}</p></div></div>
+            <div class="row gap-4 nowrap"><app-score [value]="a.score" [size]="72" label="Profile completeness" /><div><h2>Profile checklist</h2><p class="muted small">{{ a.report.note }}</p></div></div>
             <div>@for (c of a.report.checks; track c.section) { <div class="c"><mat-icon aria-hidden="true" [class]="c.status">{{ c.status === 'good' ? 'check_circle' : c.status === 'improve' ? 'error_outline' : 'cancel' }}</mat-icon><div><span class="strong">{{ c.section }}.</span> {{ c.message }}</div></div> }</div>
           </section>
           @if (a.report.keywords.matched.length || a.report.keywords.missing.length) {
             <section class="card stack">
               <h2>Target role keywords</h2>
-              <div><h3 class="small" style="margin-bottom:4px">In your profile</h3><div class="chips">@for (k of a.report.keywords.matched; track k) { <span class="chip ok">{{ k }}</span> } @empty { <span class="muted small">None found.</span> }</div></div>
-              <div><h3 class="small" style="margin-bottom:4px">Not in your profile</h3><div class="chips">@for (k of a.report.keywords.missing; track k) { <span class="chip miss">{{ k }}</span> } @empty { <span class="muted small">None.</span> }</div></div>
+              <div><h3 class="small mb-1">In your profile</h3><div class="chips">@for (k of a.report.keywords.matched; track k) { <span class="chip ok">{{ k }}</span> } @empty { <span class="muted small">None found.</span> }</div></div>
+              <div><h3 class="small mb-1">Not in your profile</h3><div class="chips">@for (k of a.report.keywords.missing; track k) { <span class="chip miss">{{ k }}</span> } @empty { <span class="muted small">None.</span> }</div></div>
               <p class="muted xs">Add only what truly reflects your experience.</p>
             </section>
           }

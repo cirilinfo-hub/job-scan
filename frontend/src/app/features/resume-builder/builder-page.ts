@@ -12,8 +12,8 @@ interface Template { id: string; name: string; description: string }
 
 @Component({
   imports: [UI, ResumeEditor, ResumePreview],
-  styles: `.tpl { display: flex; gap: 8px; flex-wrap: wrap; } .t { all: unset; cursor: pointer; flex: 1 1 140px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; background: var(--surface); }
-    .t:focus-visible { outline: 2px solid var(--accent); } .t.on { border-color: var(--accent); background: var(--accent-soft); } .sticky { position: sticky; top: 16px; max-height: calc(100vh - 110px); overflow: auto; }`,
+  styles: `.tpl { display: flex; gap: 8px; flex-wrap: wrap; } .t { all: unset; cursor: pointer; flex: 1 1 140px; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--border-strong); border-radius: var(--radius-md); font-size: 14px; background: var(--surface); } .t:hover { border-color: var(--text); }
+    .t:focus-visible { outline: 2px solid var(--focus-ring); } .t.on { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); } .sticky { position: sticky; top: 16px; max-height: calc(100vh - 110px); overflow: auto; }`,
   template: `<div class="page">
     <div class="page-head">
       <div><h1>Resume builder</h1><p>Single-column templates that most resume parsers can read. Your draft stays on this page until you save it.</p></div>
@@ -33,12 +33,12 @@ interface Template { id: string; name: string; description: string }
           </div>
         </section>
         <section class="card"><app-resume-editor [value]="draft()" [showOrder]="true" (changed)="draft.set($event)" /></section>
-        <section class="card row" style="align-items:flex-start">
-          <mat-form-field appearance="outline" style="flex:1 1 220px"><mat-label>Resume name</mat-label><input matInput [formControl]="title" /><mat-error>Give this resume a name.</mat-error></mat-form-field>
-          <button mat-flat-button type="button" style="margin-top:6px" [disabled]="saving()" (click)="save()">{{ saving() ? 'Saving...' : 'Save resume' }}</button>
+        <section class="card row items-start">
+          <mat-form-field class="flex-220" appearance="outline"><mat-label>Resume name</mat-label><input matInput [formControl]="title" /><mat-error>Give this resume a name.</mat-error></mat-form-field>
+          <button class="mt-2" mat-flat-button type="button" [disabled]="saving()" (click)="save()">{{ saving() ? 'Saving...' : 'Save resume' }}</button>
         </section>
       </div>
-      <div><div class="sticky"><h2 style="margin-bottom:8px">Live preview</h2><app-resume-preview [value]="draft()" [template]="template()" /></div></div>
+      <div><div class="sticky"><h2 class="mb-2">Live preview</h2><app-resume-preview [value]="draft()" [template]="template()" /></div></div>
     </div>
   </div>`,
 })

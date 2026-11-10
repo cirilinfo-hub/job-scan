@@ -31,17 +31,18 @@ export class BarChart implements AfterViewInit, OnDestroy {
     if (this.destroyed) return;
     const css = getComputedStyle(document.documentElement);
     const v = (n: string) => css.getPropertyValue(n).trim();
+    const font = { family: v('--font-sans') || 'sans-serif', size: 12 };
     this.chart?.destroy();
     const axis = this.horizontal() ? 'y' : 'x';
     this.chart = new ChartJS(this.canvas().nativeElement, {
       type: 'bar',
-      data: { labels, datasets: [{ label: this.seriesName(), data: values, backgroundColor: v('--accent'), hoverBackgroundColor: v('--accent'), borderRadius: 4, borderSkipped: 'start', maxBarThickness: 28, barPercentage: 0.7 }] },
+      data: { labels, datasets: [{ label: this.seriesName(), data: values, backgroundColor: v('--chart-1'), hoverBackgroundColor: v('--primary'), borderRadius: 4, borderSkipped: 'start', maxBarThickness: 28, barPercentage: 0.7 }] },
       options: {
         indexAxis: axis, responsive: true, maintainAspectRatio: false, animation: false,
-        plugins: { legend: { display: false }, tooltip: { backgroundColor: v('--text'), titleColor: v('--surface'), bodyColor: v('--surface'), displayColors: false, padding: 8, cornerRadius: 6 } },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: v('--text'), titleColor: v('--surface'), bodyColor: v('--surface'), displayColors: false, padding: 10, cornerRadius: 8, titleFont: { ...font, weight: 600 }, bodyFont: font } },
         scales: {
-          [axis]: { grid: { display: false }, border: { color: v('--border') }, ticks: { color: v('--text-2'), font: { family: 'Inter', size: 12 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } },
-          [axis === 'x' ? 'y' : 'x']: { beginAtZero: true, grid: { color: v('--border') }, border: { display: false }, ticks: { color: v('--text-2'), font: { family: 'Inter', size: 12 }, precision: 0, maxTicksLimit: 5 } },
+          [axis]: { grid: { display: false }, border: { color: v('--border') }, ticks: { color: v('--text-2'), font, maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } },
+          [axis === 'x' ? 'y' : 'x']: { beginAtZero: true, grid: { color: v('--border') }, border: { display: false }, ticks: { color: v('--text-2'), font, precision: 0, maxTicksLimit: 5 } },
         },
       },
     });

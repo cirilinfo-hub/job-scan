@@ -1,0 +1,35 @@
+@use 'mixins' as m;
+
+// Every button is a pill. Material provides the base; these classes add the reference's emphases.
+.mat-mdc-button-base { letter-spacing: -0.005em; }
+.mdc-button .mat-icon, .mat-mdc-button .mat-icon { font-size: 18px; width: 18px; height: 18px; }
+.mat-mdc-unelevated-button:not(:disabled), .mat-mdc-outlined-button:not(:disabled) { @include m.lift(1px); }
+
+// The single warm call to action on a screen: yellow with navy text. Use at most once per view.
+.mat-mdc-unelevated-button.btn-accent:not(:disabled) {
+  --mat-button-filled-container-color: var(--accent-yellow);
+  --mat-button-filled-label-text-color: var(--on-yellow);
+  --mat-button-filled-state-layer-color: var(--on-yellow);
+  --mat-button-filled-ripple-color: rgb(14 18 64 / 0.12);
+}
+.btn-lg { --mat-button-filled-container-height: var(--control-h-lg); --mat-button-outlined-container-height: var(--control-h-lg); --mat-button-filled-horizontal-padding: 28px; }
+
+// Destructive actions in dialogs and admin screens.
+.mat-mdc-unelevated-button.btn-danger:not(:disabled) {
+  --mat-button-filled-container-color: var(--danger);
+  --mat-button-filled-label-text-color: var(--surface);
+}
+
+// Round icon buttons sitting on a disc, used in the header and on tiles.
+.icon-disc.mat-mdc-icon-button {
+  --mat-icon-button-state-layer-size: 40px;
+  width: 40px; height: 40px; padding: 8px;
+  background: var(--surface); color: var(--text);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.icon-btn-28.mat-mdc-icon-button { --mat-icon-button-state-layer-size: 28px; width: 28px; height: 28px; padding: 2px; }
+
+// Reset for clickable text that isn't styled as a button (card titles, sort headers).
+.link-btn { all: unset; cursor: pointer; }
+.link-btn:hover { color: var(--accent); }
+.link-btn:focus-visible { @include m.focus-ring; border-radius: 4px; }

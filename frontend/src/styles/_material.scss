@@ -1,0 +1,151 @@
+@use '@angular/material' as mat;
+
+// Angular Material, themed with the product's own tokens. Every override below uses Material's
+// public token API, so nothing depends on internal class names.
+
+html {
+  @include mat.theme((
+    color: (primary: mat.$blue-palette, tertiary: mat.$blue-palette),
+    typography: (plain-family: var(--font-sans), brand-family: var(--font-sans)),
+    density: -1,
+  ));
+
+  // System tokens: selection controls, focus and form outlines follow the accent blue.
+  --mat-sys-primary: var(--accent);
+  --mat-sys-on-primary: var(--on-accent);
+  --mat-sys-primary-container: var(--accent-soft);
+  --mat-sys-on-primary-container: var(--text);
+  --mat-sys-secondary-container: var(--accent-soft);
+  --mat-sys-on-secondary-container: var(--text);
+  --mat-sys-surface: var(--surface);
+  --mat-sys-on-surface: var(--text);
+  --mat-sys-on-surface-variant: var(--text-2);
+  --mat-sys-surface-container: var(--surface);
+  --mat-sys-surface-container-low: var(--surface);
+  --mat-sys-surface-container-high: var(--surface);
+  --mat-sys-surface-container-highest: var(--surface-2);
+  --mat-sys-surface-container-lowest: var(--surface);
+  --mat-sys-background: var(--bg);
+  --mat-sys-outline: var(--border-strong);
+  --mat-sys-outline-variant: var(--border);
+  --mat-sys-error: var(--danger);
+  --mat-sys-inverse-surface: var(--text);
+  --mat-sys-inverse-on-surface: var(--surface);
+  --mat-sys-corner-full: var(--radius-pill);
+
+  @include mat.button-overrides((
+    filled-container-color: var(--primary),
+    filled-label-text-color: var(--on-primary),
+    filled-container-height: var(--control-h),
+    filled-container-shape: var(--radius-pill),
+    filled-horizontal-padding: 20px,
+    filled-label-text-size: 15px,
+    filled-label-text-weight: 500,
+    filled-label-text-tracking: -0.005em,
+    outlined-container-height: var(--control-h),
+    outlined-container-shape: var(--radius-pill),
+    outlined-outline-color: var(--border-strong),
+    outlined-outline-width: 1.5px,
+    outlined-label-text-color: var(--text),
+    outlined-horizontal-padding: 20px,
+    outlined-label-text-size: 15px,
+    outlined-label-text-weight: 500,
+    outlined-label-text-tracking: -0.005em,
+    text-container-height: var(--control-h),
+    text-container-shape: var(--radius-pill),
+    text-label-text-color: var(--accent),
+    text-label-text-size: 15px,
+    text-label-text-weight: 500,
+    text-horizontal-padding: 14px,
+  ));
+
+  @include mat.form-field-overrides((
+    outlined-container-shape: var(--radius-md),
+    outlined-outline-color: var(--border-strong),
+    outlined-hover-outline-color: var(--text),
+    outlined-focus-outline-color: var(--focus-ring),
+    outlined-outline-width: 1.5px,
+    outlined-focus-outline-width: 2px,
+    outlined-label-text-color: var(--text-2),
+    outlined-input-text-color: var(--text),
+    outlined-input-text-placeholder-color: var(--text-2),
+    container-text-size: 15px,
+    outlined-label-text-size: 15px,
+    subscript-text-size: 12px,
+  ));
+
+  @include mat.select-overrides((
+    panel-background-color: var(--surface),
+    container-elevation-shadow: var(--shadow-lg),
+    trigger-text-size: 15px,
+  ));
+
+  @include mat.dialog-overrides((
+    container-shape: var(--radius-lg),
+    container-color: var(--surface),
+    supporting-text-color: var(--text),
+    subhead-color: var(--text),
+    subhead-size: 22px,
+    subhead-weight: 600,
+    subhead-tracking: -0.02em,
+  ));
+
+  @include mat.menu-overrides((
+    container-shape: var(--radius-md),
+    container-color: var(--surface),
+    container-elevation-shadow: var(--shadow-lg),
+    item-label-text-size: 15px,
+    item-icon-color: var(--text-2),
+  ));
+
+  @include mat.snack-bar-overrides((
+    container-shape: var(--radius-md),
+    container-color: var(--text),
+    supporting-text-color: var(--surface),
+    button-color: var(--surface),
+  ));
+
+  @include mat.tooltip-overrides((
+    container-shape: var(--radius-sm),
+    container-color: var(--text),
+    supporting-text-color: var(--surface),
+    supporting-text-size: 12px,
+  ));
+
+  @include mat.button-toggle-overrides((
+    shape: var(--radius-pill),
+    height: var(--control-h),
+    selected-state-background-color: var(--primary),
+    selected-state-text-color: var(--on-primary),
+    text-color: var(--text),
+    background-color: var(--surface),
+    divider-color: var(--border-strong),
+    label-text-size: 14px,
+    label-text-weight: 500,
+  ));
+
+  @include mat.tabs-overrides((
+    active-indicator-color: var(--accent),
+    active-indicator-height: 3px,
+    active-indicator-shape: 3px,
+    active-label-text-color: var(--text),
+    active-focus-label-text-color: var(--text),
+    active-hover-label-text-color: var(--text),
+    inactive-label-text-color: var(--text-2),
+    label-text-size: 15px,
+    label-text-weight: 500,
+    divider-color: var(--border),
+  ));
+}
+
+// Pieces the token API doesn't cover.
+.mat-mdc-snack-bar-container.toast-error {
+  --mat-snack-bar-container-color: var(--danger);
+  --mat-snack-bar-supporting-text-color: var(--surface);
+  --mat-snack-bar-button-color: var(--surface);
+}
+.mat-mdc-dialog-container .mat-mdc-dialog-title { padding-top: var(--space-6); }
+.mat-mdc-dialog-actions { padding: var(--space-2) var(--space-6) var(--space-5); gap: var(--space-2); }
+.mat-mdc-menu-panel { border: 1px solid var(--border); }
+.mat-mdc-select-panel { border-radius: var(--radius-md); }
+mat-form-field { width: 100%; }

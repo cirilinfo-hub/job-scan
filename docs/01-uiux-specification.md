@@ -31,28 +31,29 @@ We have **not seen the authenticated app**. Any statement below about its layout
 
 ## 2. Design tokens
 
-Single accent (deep teal-green), neutral slate surfaces, status colours used only for status. No gradients. All text pairs meet WCAG AA.
+The visual language follows the Cirilinfo reference design system: a softly lit grey stage, deep navy type, and a few bold blocks of electric blue, yellow and mint. Big type, round shapes, very little decoration. Tokens live in `frontend/src/styles/` (`_colors.scss`, `_variables.scss`); components use only the semantic names below. All text pairs meet WCAG AA in both themes, and control borders meet 3:1.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--bg` | `#F6F7F8` | `#0F1214` | App background |
-| `--surface` | `#FFFFFF` | `#171B1E` | Cards, tables, panels |
-| `--surface-2` | `#F0F2F3` | `#1F2428` | Hover, inset areas |
-| `--border` | `#E1E4E7` | `#2B3136` | Hairlines |
-| `--text` | `#171C20` | `#ECEFF1` | Primary text |
-| `--text-2` | `#55606A` | `#A3ADB5` | Secondary text |
-| `--accent` | `#0B6E63` | `#3FBFAE` | Primary actions, links, focus |
-| `--accent-soft` | `#E2F2EF` | `#15312D` | Selected nav, soft badges |
-| `--success` | `#1B7A43` | `#4CC685` | Strong score, accepted, offer |
-| `--warning` | `#A15C00` | `#E5A84B` | Moderate score, follow-up due |
-| `--danger` | `#B3261E` | `#F2867E` | Weak score, destructive, rejected |
-| `--info` | `#2B5FB8` | `#7FA8EE` | Neutral status |
+| `--bg` | `#F1F2F5` | `#0D1020` | App background (surface-100) |
+| `--surface` | `#FFFFFF` | `#171B30` | Cards, tables, panels (surface-000) |
+| `--surface-2` | `#E6E8EE` | `#22273F` | Wells, hover, kanban columns (surface-200) |
+| `--border` / `--border-strong` | `#D5D8E2` / `#6E7390` | `#2C3150` / `#6B7294` | Hairlines / control borders |
+| `--text` / `--text-2` | `#0E1240` / `#4A4F6E` | `#F2F4FB` / `#A7ADC8` | Navy ink / muted ink |
+| `--primary` | `#141B6B` | `#2A33A0` | Primary buttons, active navigation (navy-700) |
+| `--accent` | `#1660E0` | `#7FB2FF` | Links, selection, progress, focus (blue-600) |
+| `--accent-yellow` | `#FFD23F` | `#FFD23F` | One warm call to action per view, navy text |
+| `--accent-mint` | `#3CC79B` | `#45D3A6` | Third action tile, positive badges, navy text |
+| `--success` | `#13805A` | `#45D3A6` | Strong score, accepted, offer |
+| `--warning` | `#8A5300` | `#F3C54B` | Moderate score, follow-up due (an addition to the reference) |
+| `--danger` | `#C2362F` | `#FF8A80` | Weak score, destructive, rejected |
 
-- **Type:** Inter (400/500/600), with a system fallback. Scale: 12, 13, 14 (body), 16, 18, 22, 28.
-- **Spacing:** 4 px base: 4, 8, 12, 16, 24, 32, 48.
-- **Radius:** 6 inputs and buttons; 10 cards; 14 dialogs; 999 badges.
-- **Elevation:** cards use a border, with `0 1px 2px rgb(0 0 0 / .04)`. Menus and dialogs get one larger shadow.
-- **Motion:** 120–180 ms ease-out, disabled under `prefers-reduced-motion`.
+- **Type:** Instrument Sans (400/500/600/700, self-hosted). Body 15 px; h1 32 px (26 on phones); h2 19; h3 15; stat numbers 36 px with tabular figures; tight negative tracking on headings.
+- **Spacing:** 4 px base: 4, 8, 12, 16, 20, 24, 32, 48, 64.
+- **Radius:** pill (999) for buttons, nav items, badges and icon buttons; 16 inputs, menus and list panels; 24 cards, tiles and dialogs; 40 hero panels.
+- **Elevation:** soft studio shadows only (`--shadow` at rest, `--shadow-lg` for hover, menus and dialogs). Dark mode adds a hairline because shadows barely show.
+- **Action tiles:** blue (lead action, spans two columns), navy (second), mint (third). Never more than these three colours in one grid.
+- **Motion:** 160 ms with a standard ease; tiles and buttons rise 1–2 px on hover. Movement is removed under `prefers-reduced-motion`.
 
 ## 3. Layout and responsive rules
 

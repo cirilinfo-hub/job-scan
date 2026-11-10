@@ -25,18 +25,22 @@ export const MAIN_NAV: NavGroup[] = [
 @Component({
   selector: 'app-sidebar', imports: [RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule], changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `:host { display: block; height: 100%; }
-    nav { height: 100%; display: flex; flex-direction: column; gap: 16px; padding: 12px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; overflow-x: hidden; }
-    .brand { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 6px; color: var(--text); font-weight: 600; font-size: 16px; }
-    .brand:hover { text-decoration: none; } .brand img { width: 28px; height: 28px; flex: none; }
-    .glabel { font-size: 12px; color: var(--text-2); padding: 0 10px 4px; }
-    a.item { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: 8px; color: var(--text-2); font-weight: 500; white-space: nowrap; }
-    a.item:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
-    a.item.active { background: var(--accent-soft); color: var(--accent); }
-    a.item .material-icons { font-size: 20px; width: 20px; height: 20px; flex: none; }
-    .collapsed .item { justify-content: center; padding: 0; } .collapsed .brand { justify-content: center; padding: 0; } .collapsed .glabel { height: 1px; background: var(--border); padding: 0; margin: 0 4px 6px; overflow: hidden; color: transparent; }
+    nav { height: 100%; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-4) var(--space-3) var(--space-4) var(--space-4); background: var(--bg); overflow-y: auto; overflow-x: hidden; }
+    .brand { display: flex; align-items: center; gap: var(--space-3); height: 48px; padding: 0 var(--space-2); color: var(--text); }
+    .brand:hover { text-decoration: none; } .brand img { width: 32px; height: 32px; flex: none; }
+    .sub { font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--text-2); margin-left: 2px; }
+    .glabel { font-size: 12px; font-weight: 500; letter-spacing: .01em; color: var(--text-2); padding: 0 var(--space-3) var(--space-1); }
+    a.item { display: flex; align-items: center; gap: var(--space-3); height: 40px; padding: 0 var(--space-3); margin-bottom: 2px; border-radius: var(--radius-pill); color: var(--text); font-size: 15px; font-weight: 500; white-space: nowrap; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+    a.item:hover { background: var(--surface-2); text-decoration: none; }
+    a.item.active { background: var(--primary); color: var(--on-primary); }
+    a.item .material-icons { font-size: 20px; width: 20px; height: 20px; flex: none; color: var(--text-2); }
+    a.item:hover .material-icons { color: var(--text); } a.item.active .material-icons { color: inherit; }
+    .collapsed { padding-left: var(--space-3); }
+    .collapsed .item { justify-content: center; padding: 0; width: 44px; height: 44px; margin-left: auto; margin-right: auto; } .collapsed .brand { justify-content: center; padding: 0; }
+    .collapsed .glabel { height: 1px; background: var(--border); padding: 0; margin: 0 var(--space-2) var(--space-2); overflow: hidden; color: transparent; }
     .bottom { margin-top: auto; }`,
   template: `<nav [class.collapsed]="collapsed()" [attr.aria-label]="navLabel()">
-    <a class="brand" [routerLink]="home()" (click)="navigate.emit()"><img src="favicon.svg" alt="" />@if (!collapsed()) { <span>{{ brand.name }}@if (subtitle()) { <span class="muted"> {{ subtitle() }}</span> }</span> }</a>
+    <a class="brand" [routerLink]="home()" (click)="navigate.emit()"><img src="favicon.svg" alt="" />@if (!collapsed()) { <span class="wordmark">{{ brand.name }}@if (subtitle()) { <span class="sub">{{ subtitle() }}</span> }</span> }</a>
     @for (g of visible(); track g.label) {
       <div>
         <div class="glabel">{{ g.label }}</div>

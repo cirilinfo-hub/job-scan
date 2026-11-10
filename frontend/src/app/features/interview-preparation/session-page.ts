@@ -33,19 +33,19 @@ interface Session { id: number; title: string; status: string; answers: Answer[]
             <button mat-flat-button type="button" [disabled]="!text.value.trim() || busy()" (click)="save()">Save and check</button>
             @if (ai.available() && a.answer) { <button mat-stroked-button type="button" [disabled]="aiBusy()" (click)="aiFeedback()"><mat-icon>auto_awesome</mat-icon>{{ aiBusy() ? 'Reviewing...' : 'Get AI feedback' }}</button> }
           </div>
-          <details class="small"><summary style="cursor:pointer; color:var(--accent)">Guidance and sample outline</summary><p style="margin-top:4px">{{ a.guidance }}</p><p class="muted" style="margin-top:4px">{{ a.sample_answer }}</p></details>
+          <details class="small"><summary class="pointer text-accent">Guidance and sample outline</summary><p class="mt-1">{{ a.guidance }}</p><p class="muted mt-1">{{ a.sample_answer }}</p></details>
         </section>
         @if (a.rule_feedback; as f) {
           <section class="card stack small">
             <div class="row between"><h2>Structure check</h2><span class="badge">Rule-based</span></div>
             <p class="muted xs">A simple text check of length and structure. It can't judge how good or true your answer is.</p>
-            <div class="chips">@for (k of starKeys; track k) { <span class="chip" [class.ok]="f.star[k]"><mat-icon aria-hidden="true" style="font-size:14px;width:14px;height:14px">{{ f.star[k] ? 'check' : 'remove' }}</mat-icon>{{ k }}</span> }<span class="chip">{{ f.words }} words</span></div>
+            <div class="chips">@for (k of starKeys; track k) { <span class="chip" [class.ok]="f.star[k]"><mat-icon class="icon-14" aria-hidden="true">{{ f.star[k] ? 'check' : 'remove' }}</mat-icon>{{ k }}</span> }<span class="chip">{{ f.words }} words</span></div>
             @for (n of f.notes; track n) { <div>{{ n }}</div> } @empty { <div>No structure issues spotted.</div> }
           </section>
         }
         @if (a.ai_feedback; as f) {
           <section class="card stack small">
-            <div class="row" style="flex-wrap:nowrap; gap:12px"><app-score [value]="f.score" [size]="56" label="AI answer rating" /><div><h2>AI feedback</h2><p class="muted xs">One AI reviewer's opinion on this answer. It isn't how an interviewer would score you.</p></div></div>
+            <div class="row nowrap gap-3"><app-score [value]="f.score" [size]="56" label="AI answer rating" /><div><h2>AI feedback</h2><p class="muted xs">One AI reviewer's opinion on this answer. It isn't how an interviewer would score you.</p></div></div>
             <div><h3>Strengths</h3>@for (x of f.strengths; track x) { <div>{{ x }}</div> }</div>
             <div><h3>To improve</h3>@for (x of f.improvements; track x) { <div>{{ x }}</div> }</div>
             <div><h3>Improved outline</h3><pre>{{ f.improvedOutline }}</pre></div>

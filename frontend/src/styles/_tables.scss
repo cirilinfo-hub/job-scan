@@ -1,0 +1,28 @@
+@use 'mixins' as m;
+
+// position: relative keeps visually hidden labels inside the scroll box, so they can't widen the page.
+.table-wrap { overflow-x: auto; position: relative; }
+table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.tbl th {
+  text-align: left; font-size: 12px; font-weight: 500; letter-spacing: 0.01em; color: var(--text-2);
+  padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border); white-space: nowrap; background: var(--surface);
+}
+table.tbl td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border); vertical-align: middle; }
+table.tbl tbody tr:last-child td { border-bottom: 0; }
+table.tbl tbody tr { transition: background-color var(--dur) var(--ease); }
+table.tbl tbody tr:hover { background: var(--bg); }
+table.tbl th button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; }
+table.tbl th button:hover { color: var(--text); }
+table.tbl th button:focus-visible { @include m.focus-ring; border-radius: 4px; }
+
+// Pagination row under a table or list.
+.pager { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); padding: var(--space-3) var(--space-4); font-size: 13px; color: var(--text-2); }
+
+// Plain lists inside cards.
+.list { display: flex; flex-direction: column; }
+.list-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); color: inherit; min-width: 0; }
+.list-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.list-item:first-child { padding-top: 0; }
+a.list-item:hover { text-decoration: none; }
+a.list-item:hover .li-title { color: var(--accent); }
+.li-title { font-weight: 500; }

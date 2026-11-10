@@ -12,7 +12,7 @@ const ICON: Record<string, string> = { follow_up: 'schedule', interview: 'event'
 @Component({
   imports: [UI, EmptyState, ErrorBlock, LoadingSkeleton],
   styles: `.n { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: flex-start; } .n:last-child { border-bottom: 0; } .n.unread { background: var(--accent-soft); }
-    .open { all: unset; cursor: pointer; flex: 1; min-width: 0; display: block; } .open:focus-visible { outline: 2px solid var(--accent); } .open:hover .strong { color: var(--accent); }`,
+    .open { all: unset; cursor: pointer; flex: 1; min-width: 0; display: block; } .open:focus-visible { outline: 2px solid var(--focus-ring); } .open:hover .strong { color: var(--accent); }`,
   template: `<div class="page page-narrow">
     <div class="page-head"><div><h1>Notifications</h1></div>
       <div class="actions"><button mat-button type="button" (click)="unread.set(!unread()); load(1)">{{ unread() ? 'Show all' : 'Show unread' }}</button><button mat-stroked-button type="button" (click)="readAll()">Mark all as read</button></div></div>

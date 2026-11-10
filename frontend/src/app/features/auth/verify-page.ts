@@ -5,7 +5,8 @@ import { UI } from '../../shared/ui';
 
 @Component({
   imports: [UI],
-  styles: `:host { display: grid; place-items: center; min-height: 100vh; padding: 16px; } .card { max-width: 420px; width: 100%; padding: 24px; }`,
+  styles: `:host { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; padding: var(--space-4); background: var(--bg); }
+    .card { max-width: 440px; width: 100%; padding: var(--space-8); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); }`,
   template: `<main class="card stack">
     <h1>Email verification</h1>
     @if (state() === 'busy') { <p class="muted" role="status">Checking your link...</p> }

@@ -26,7 +26,7 @@ interface SessionRow { id: number; user_agent: string | null; ip: string | null;
     <div class="grid split">
       <div class="stack">
         <form class="card" [formGroup]="profile" (ngSubmit)="saveProfile()">
-          <h2 style="margin-bottom:12px">Career profile</h2>
+          <h2 class="mb-3">Career profile</h2>
           <div class="form-grid">
             <mat-form-field appearance="outline"><mat-label>Headline</mat-label><input matInput formControlName="headline" /></mat-form-field>
             <mat-form-field appearance="outline"><mat-label>Target job title</mat-label><input matInput formControlName="targetTitle" /></mat-form-field>
@@ -42,8 +42,8 @@ interface SessionRow { id: number; user_agent: string | null; ip: string | null;
             <mat-form-field appearance="outline"><mat-label>LinkedIn URL</mat-label><input matInput type="url" formControlName="linkedinUrl" /><mat-error>Links must start with http:// or https://</mat-error></mat-form-field>
             <mat-form-field appearance="outline"><mat-label>Website</mat-label><input matInput type="url" formControlName="websiteUrl" /><mat-error>Links must start with http:// or https://</mat-error></mat-form-field>
           </div>
-          <h3 style="margin:4px 0 8px">Skills</h3>
-          <div class="chips" style="margin-bottom:8px">
+          <h3 class="mt-1 mb-2">Skills</h3>
+          <div class="chips mb-2">
             @for (s of skills(); track s.id) { <span class="chip">{{ s.name }}<button type="button" (click)="removeSkill(s.id)" [attr.aria-label]="'Remove ' + s.name"><mat-icon>close</mat-icon></button></span> }
           </div>
           <mat-form-field appearance="outline"><mat-label>Add a skill</mat-label><input matInput [formControl]="skillQ" [matAutocomplete]="auto" />
@@ -57,29 +57,29 @@ interface SessionRow { id: number; user_agent: string | null; ip: string | null;
           <section class="card stack">
             <div class="row between"><h2>Profile completion</h2><span class="strong">{{ c.percent }}%</span></div>
             <app-progress [value]="c.percent" label="Profile completion" />
-            <div class="small stack-sm">@for (i of c.items; track i.key) { <div class="row" style="flex-wrap:nowrap"><mat-icon aria-hidden="true" [style.color]="i.done ? 'var(--success)' : 'var(--text-2)'" style="font-size:18px;width:18px;height:18px">{{ i.done ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>{{ i.label }}<span class="sr-only">{{ i.done ? 'done' : 'to do' }}</span></div> }</div>
+            <div class="small stack-sm">@for (i of c.items; track i.key) { <div class="row nowrap"><mat-icon class="icon-18" aria-hidden="true" [style.color]="i.done ? 'var(--success)' : 'var(--text-2)'">{{ i.done ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>{{ i.label }}<span class="sr-only">{{ i.done ? 'done' : 'to do' }}</span></div> }</div>
           </section>
         }
         <form class="card" [formGroup]="account" (ngSubmit)="saveAccount()">
-          <h2 style="margin-bottom:12px">Account</h2>
+          <h2 class="mb-3">Account</h2>
           <mat-form-field appearance="outline"><mat-label>Full name</mat-label><input matInput formControlName="fullName" /><mat-error>Enter your name.</mat-error></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Theme</mat-label><mat-select formControlName="theme"><mat-option value="light">Light</mat-option><mat-option value="dark">Dark</mat-option><mat-option value="system">Same as device</mat-option></mat-select></mat-form-field>
-          <div style="margin-bottom:12px"><mat-slide-toggle formControlName="emailNotifications">Email me reminders too</mat-slide-toggle><div class="muted xs" style="margin-top:4px">Sent only when email is set up on this server.</div></div>
+          <div class="mb-3"><mat-slide-toggle formControlName="emailNotifications">Email me reminders too</mat-slide-toggle><div class="muted xs mt-1">Sent only when email is set up on this server.</div></div>
           <button mat-stroked-button type="submit">Save account</button>
         </form>
         <form class="card" [formGroup]="pw" (ngSubmit)="changePassword()">
-          <h2 style="margin-bottom:12px">Change password</h2>
+          <h2 class="mb-3">Change password</h2>
           <mat-form-field appearance="outline"><mat-label>Current password</mat-label><input matInput type="password" autocomplete="current-password" formControlName="currentPassword" /></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>New password</mat-label><input matInput type="password" autocomplete="new-password" formControlName="newPassword" /><mat-hint>At least 10 characters, with a letter and a number.</mat-hint><mat-error>At least 10 characters, with a letter and a number.</mat-error></mat-form-field>
-          <button mat-stroked-button type="submit" style="margin-top:8px">Change password</button>
+          <button class="mt-2" mat-stroked-button type="submit">Change password</button>
         </form>
         <section class="card">
-          <h2 style="margin-bottom:8px">Active sessions</h2>
+          <h2 class="mb-2">Active sessions</h2>
           <div class="list">@for (s of sessions(); track s.id) { <div class="list-item small"><div class="grow"><div class="truncate">{{ s.user_agent || 'Unknown device' }}</div><div class="muted xs">{{ s.ip }} · {{ s.created_at | date: 'MMM d, h:mm a' }}</div></div><button mat-button type="button" (click)="revoke(s.id)">Sign out</button></div> }</div>
         </section>
         <section class="card stack">
           <h2>Delete account</h2><p class="muted small">Your account closes right away. Your data is permanently removed after the retention period.</p>
-          <div><button mat-stroked-button type="button" style="color:var(--danger)" (click)="deleteAccount()">Delete my account</button></div>
+          <div><button class="text-danger" mat-stroked-button type="button" (click)="deleteAccount()">Delete my account</button></div>
         </section>
       </div>
     </div>

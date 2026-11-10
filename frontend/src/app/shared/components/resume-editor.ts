@@ -23,8 +23,8 @@ const commas = (s: string) => s.split(/[,\n]/).map((x) => x.trim()).filter(Boole
 @Component({
   selector: 'app-resume-editor', imports: [FormsModule, DragDropModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule], changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `.sec { display: flex; flex-direction: column; gap: 8px; } .sec + .sec { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px; }
-    .item { border: 1px solid var(--border); border-radius: 8px; padding: 12px 12px 0; position: relative; margin-bottom: 8px; }
-    .order { display: flex; flex-direction: column; gap: 4px; } .ord { display: flex; align-items: center; gap: 8px; padding: 2px 4px 2px 10px; background: var(--surface-2); border-radius: 6px; cursor: grab; font-size: 13px; }
+    .item { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 12px 0; position: relative; margin-bottom: 8px; }
+    .order { display: flex; flex-direction: column; gap: 4px; } .ord { display: flex; align-items: center; gap: 8px; padding: 2px 4px 2px 10px; background: var(--surface-2); border-radius: var(--radius-sm); cursor: grab; font-size: 13px; }
     .ord .sp { flex: 1; } .cdk-drag-preview { box-shadow: var(--shadow-lg); } .cdk-drag-placeholder { opacity: .3; }`,
   template: `@let r = value();
   <div class="sec">
@@ -46,7 +46,7 @@ const commas = (s: string) => s.split(/[,\n]/).map((x) => x.trim()).filter(Boole
       <div class="order" cdkDropList (cdkDropListDropped)="dropSection($event)">
         @for (s of order(); track s; let i = $index) {
           <div class="ord" cdkDrag>
-            <mat-icon aria-hidden="true" style="font-size:16px;width:16px;height:16px">drag_indicator</mat-icon>{{ labels[s] }}<span class="sp"></span>
+            <mat-icon class="icon-16" aria-hidden="true">drag_indicator</mat-icon>{{ labels[s] }}<span class="sp"></span>
             <button mat-icon-button type="button" [disabled]="i === 0" (click)="moveSection(i, -1)" [attr.aria-label]="'Move ' + labels[s] + ' up'"><mat-icon>arrow_upward</mat-icon></button>
             <button mat-icon-button type="button" [disabled]="i === order().length - 1" (click)="moveSection(i, 1)" [attr.aria-label]="'Move ' + labels[s] + ' down'"><mat-icon>arrow_downward</mat-icon></button>
           </div>
@@ -70,10 +70,10 @@ const commas = (s: string) => s.split(/[,\n]/).map((x) => x.trim()).filter(Boole
           <mat-form-field appearance="outline"><mat-label>Start date</mat-label><input matInput placeholder="Jan 2021" [ngModel]="e.startDate" (ngModelChange)="setExp(i, { startDate: $event })" [name]="'es' + i" /></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>End date</mat-label><input matInput placeholder="Mar 2024" [disabled]="!!e.current" [ngModel]="e.endDate" (ngModelChange)="setExp(i, { endDate: $event })" [name]="'ee' + i" /></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Location</mat-label><input matInput [ngModel]="e.location" (ngModelChange)="setExp(i, { location: $event })" [name]="'el' + i" /></mat-form-field>
-          <div style="padding-top:8px"><mat-checkbox [ngModel]="!!e.current" (ngModelChange)="setExp(i, { current: $event })" [name]="'ecu' + i">I work here now</mat-checkbox></div>
+          <div class="pt-2"><mat-checkbox [ngModel]="!!e.current" (ngModelChange)="setExp(i, { current: $event })" [name]="'ecu' + i">I work here now</mat-checkbox></div>
           <mat-form-field appearance="outline" class="span-all"><mat-label>Achievements</mat-label><textarea matInput rows="4" [ngModel]="e.bullets.join('\n')" (ngModelChange)="setExp(i, { bullets: toLines($event) })" [ngModelOptions]="{ updateOn: 'blur', name: 'eb' + i }"></textarea><mat-hint>One bullet per line</mat-hint></mat-form-field>
         </div>
-        <div class="row" style="justify-content:flex-end; padding: 8px 0"><button mat-button type="button" (click)="removeAt('experience', i)"><mat-icon>delete_outline</mat-icon>Remove role</button></div>
+        <div class="row justify-end py-2"><button mat-button type="button" (click)="removeAt('experience', i)"><mat-icon>delete_outline</mat-icon>Remove role</button></div>
       </div>
     } @empty { <p class="muted small">No roles added.</p> }
   </div>
@@ -87,7 +87,7 @@ const commas = (s: string) => s.split(/[,\n]/).map((x) => x.trim()).filter(Boole
           <mat-form-field appearance="outline"><mat-label>Institution</mat-label><input matInput [ngModel]="e.institution" (ngModelChange)="setEdu(i, { institution: $event })" [name]="'ei' + i" /></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Year</mat-label><input matInput [ngModel]="e.year" (ngModelChange)="setEdu(i, { year: $event })" [name]="'ey' + i" /></mat-form-field>
         </div>
-        <div class="row" style="justify-content:flex-end; padding-bottom: 8px"><button mat-button type="button" (click)="removeAt('education', i)"><mat-icon>delete_outline</mat-icon>Remove</button></div>
+        <div class="row justify-end pb-2"><button mat-button type="button" (click)="removeAt('education', i)"><mat-icon>delete_outline</mat-icon>Remove</button></div>
       </div>
     } @empty { <p class="muted small">No education added.</p> }
   </div>
@@ -98,7 +98,7 @@ const commas = (s: string) => s.split(/[,\n]/).map((x) => x.trim()).filter(Boole
       <div class="item">
         <mat-form-field appearance="outline"><mat-label>Name</mat-label><input matInput [ngModel]="p.name" (ngModelChange)="setProject(i, { name: $event })" [name]="'pn' + i" /></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>Description</mat-label><textarea matInput rows="2" [ngModel]="p.description" (ngModelChange)="setProject(i, { description: $event })" [name]="'pd' + i"></textarea></mat-form-field>
-        <div class="row" style="justify-content:flex-end; padding-bottom: 8px"><button mat-button type="button" (click)="removeAt('projects', i)"><mat-icon>delete_outline</mat-icon>Remove</button></div>
+        <div class="row justify-end pb-2"><button mat-button type="button" (click)="removeAt('projects', i)"><mat-icon>delete_outline</mat-icon>Remove</button></div>
       </div>
     } @empty { <p class="muted small">No projects added.</p> }
   </div>

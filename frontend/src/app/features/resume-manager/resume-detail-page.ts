@@ -34,28 +34,28 @@ import { UI } from '../../shared/ui';
 
       <mat-tab-group>
         <mat-tab label="Edit">
-          <div class="grid split" style="padding-top:16px">
+          <div class="grid split pt-4">
             <div class="card">
               <form class="form-grid" [formGroup]="meta" (ngSubmit)="saveMeta()">
                 <mat-form-field appearance="outline"><mat-label>Resume name</mat-label><input matInput formControlName="title" /></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Category</mat-label><input matInput formControlName="category" placeholder="e.g. Engineering" /></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Download template</mat-label><mat-select formControlName="template"><mat-option value="classic">Classic</mat-option><mat-option value="modern">Modern</mat-option><mat-option value="compact">Compact</mat-option></mat-select></mat-form-field>
-                <div style="padding-top:6px"><button mat-stroked-button type="submit">Save details</button></div>
+                <div class="pt-2"><button mat-stroked-button type="submit">Save details</button></div>
               </form>
-              <hr class="divider" style="margin:8px 0 16px" />
+              <hr class="divider mt-2 mb-4" />
               <app-resume-editor [value]="draft()!" (changed)="draft.set($event); dirty.set(true)" />
-              <div class="row" style="margin-top:16px; position: sticky; bottom: 0; background: var(--surface); padding: 8px 0;">
-                <mat-form-field appearance="outline" class="grow" subscriptSizing="dynamic" style="flex:1 1 200px"><mat-label>Version label (optional)</mat-label><input matInput [formControl]="label" /></mat-form-field>
+              <div class="row sticky-actions">
+                <mat-form-field appearance="outline" class="grow flex-200" subscriptSizing="dynamic"><mat-label>Version label (optional)</mat-label><input matInput [formControl]="label" /></mat-form-field>
                 <button mat-flat-button type="button" [disabled]="saving() || !dirty()" (click)="save()">{{ saving() ? 'Saving...' : 'Save as new version' }}</button>
               </div>
             </div>
             <div class="stack">
               <section class="card">
-                <h2 style="margin-bottom:8px">Version history</h2>
+                <h2 class="mb-2">Version history</h2>
                 <div class="list">
                   @for (v of d.versions; track v.id) {
                     <div class="list-item small">
-                      <div class="grow"><div class="li-title">Version {{ v.version_no }}@if (v.id === d.version.id) { <span class="badge accent" style="margin-left:6px">Current</span> }</div>
+                      <div class="grow"><div class="li-title">Version {{ v.version_no }}@if (v.id === d.version.id) { <span class="badge accent ml-2">Current</span> }</div>
                         <div class="muted xs">{{ v.label || source(v.change_source) }} · {{ v.created_at | date: 'MMM d, y, h:mm a' }}</div></div>
                       @if (v.id !== d.version.id) { <button mat-button type="button" (click)="restore(v.id)">Restore</button> }
                     </div>
@@ -63,7 +63,7 @@ import { UI } from '../../shared/ui';
                 </div>
               </section>
               @if (d.version.format_signals; as f) {
-                <section class="card small stack-sm"><h2 style="margin-bottom:4px">File details</h2>
+                <section class="card small stack-sm"><h2 class="mb-1">File details</h2>
                   <div>{{ d.version.file_name }}</div>
                   <div class="muted">{{ f.charCount | number }} characters read@if (f.pages) { · {{ f.pages }} page{{ f.pages === 1 ? '' : 's' }} }</div>
                 </section>
@@ -71,8 +71,8 @@ import { UI } from '../../shared/ui';
             </div>
           </div>
         </mat-tab>
-        <mat-tab label="Preview"><div style="padding-top:16px; max-width: 820px"><app-resume-preview [value]="draft()!" [template]="d.resume.template" /></div></mat-tab>
-        <mat-tab label="Extracted text"><div class="card" style="margin-top:16px"><pre class="side-text">{{ d.version.raw_text }}</pre></div></mat-tab>
+        <mat-tab label="Preview"><div class="pt-4 maxw-820"><app-resume-preview [value]="draft()!" [template]="d.resume.template" /></div></mat-tab>
+        <mat-tab label="Extracted text"><div class="card mt-4"><pre class="side-text">{{ d.version.raw_text }}</pre></div></mat-tab>
       </mat-tab-group>
     }
   </div>`,

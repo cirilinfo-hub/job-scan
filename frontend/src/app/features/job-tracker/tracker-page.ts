@@ -13,15 +13,15 @@ interface Board { stages: Stage[]; items: Application[]; followUps: FollowUp[] }
 
 @Component({
   imports: [UI, DragDropModule, MatButtonToggleModule, ErrorBlock, LoadingSkeleton, StatusBadge],
-  styles: `.board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; align-items: start; }
-    .col { background: var(--surface-2); border-radius: var(--r-card); padding: 8px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-    .col-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px; }
+  styles: `.board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 1fr); gap: var(--space-3); overflow-x: auto; padding-bottom: 8px; align-items: start; }
+    .col { background: var(--surface-2); border-radius: var(--radius-lg); padding: var(--space-3); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+    .col-head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-1) var(--space-2); font-weight: 600; }
     .drop { min-height: 80px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-    .c { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; cursor: grab; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 4px; }
-    .c:hover { border-color: var(--text-2); } .c-title { all: unset; cursor: pointer; font-weight: 600; font-size: 13px; display: block; overflow-wrap: anywhere; } .c-title:hover { color: var(--accent); } .c-title:focus-visible { outline: 2px solid var(--accent); }
+    .c { background: var(--surface); border: 1px solid transparent; border-radius: var(--radius-md); padding: var(--space-3); cursor: grab; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 4px; }
+    .c:hover { border-color: var(--border-strong); } .c-title { all: unset; cursor: pointer; font-weight: 600; font-size: 14px; display: block; overflow-wrap: anywhere; } .c-title:hover { color: var(--accent); } .c-title:focus-visible { outline: 2px solid var(--focus-ring); }
     .meta { display: flex; gap: 4px; align-items: center; font-size: 12px; color: var(--text-2); } .meta .material-icons { font-size: 14px; width: 14px; height: 14px; }
     .due { color: var(--warning); font-weight: 500; }
-    .cdk-drag-preview { box-shadow: var(--shadow-lg); border-radius: 8px; } .cdk-drag-placeholder { opacity: .35; } .cdk-drag-animating { transition: transform 120ms ease-out; } .drop.cdk-drop-list-dragging .c:not(.cdk-drag-placeholder) { transition: transform 120ms ease-out; }`,
+    .cdk-drag-preview { box-shadow: var(--shadow-lg); border-radius: var(--radius-md); } .cdk-drag-placeholder { opacity: .35; } .cdk-drag-animating { transition: transform 120ms ease-out; } .drop.cdk-drop-list-dragging .c:not(.cdk-drag-placeholder) { transition: transform 120ms ease-out; }`,
   template: `<div class="page">
     <div class="page-head">
       <div><h1>Application tracker</h1><p>Drag cards between stages, or use the stage menu on each card.</p></div>
@@ -35,7 +35,7 @@ interface Board { stages: Stage[]; items: Application[]; followUps: FollowUp[] }
 
     @if (followUps().length) {
       <div class="notice warning"><mat-icon aria-hidden="true">notifications_active</mat-icon>
-        <div><div class="strong">Follow-ups due</div>@for (f of followUps(); track f.id) { <div><button class="c-title" style="display:inline; font-weight:500" type="button" (click)="open(f.id)">{{ f.company }}: {{ f.job_title }}</button> <span class="muted">by {{ f.follow_up_at | date: 'mediumDate' }}</span></div> }</div></div>
+        <div><div class="strong">Follow-ups due</div>@for (f of followUps(); track f.id) { <div><button class="c-title inline medium" type="button" (click)="open(f.id)">{{ f.company }}: {{ f.job_title }}</button> <span class="muted">by {{ f.follow_up_at | date: 'mediumDate' }}</span></div> }</div></div>
     }
     @if (error()) { <app-error [message]="error()" (retry)="load()" /> }
     @if (loading()) { <app-skeleton [count]="6" [height]="260" [min]="180" /> }
@@ -47,9 +47,9 @@ interface Board { stages: Stage[]; items: Application[]; followUps: FollowUp[] }
             <div class="drop" cdkDropList [cdkDropListData]="columns()[s]" [id]="s" (cdkDropListDropped)="drop($event, s)">
               @for (a of columns()[s]; track a.id) {
                 <article class="c" cdkDrag [cdkDragData]="a">
-                  <div class="row between" style="flex-wrap:nowrap; align-items:flex-start">
+                  <div class="row between nowrap items-start">
                     <div class="grow"><button class="c-title" type="button" (click)="open(a.id)">{{ a.job_title }}</button><div class="muted xs">{{ a.company }}</div></div>
-                    <button mat-icon-button type="button" style="--mat-icon-button-state-layer-size:28px; width:28px; height:28px; padding:2px" [matMenuTriggerFor]="m" [attr.aria-label]="'Change stage for ' + a.job_title" (mousedown)="$event.stopPropagation()"><mat-icon>more_horiz</mat-icon></button>
+                    <button class="icon-btn-28" mat-icon-button type="button" [matMenuTriggerFor]="m" [attr.aria-label]="'Change stage for ' + a.job_title" (mousedown)="$event.stopPropagation()"><mat-icon>more_horiz</mat-icon></button>
                     <mat-menu #m="matMenu">@for (t of stages; track t) { @if (t !== s) { <button mat-menu-item type="button" (click)="moveTo(a, t)">Move to {{ label(t) }}</button> } }</mat-menu>
                   </div>
                   @if (a.next_interview) { <div class="meta"><mat-icon aria-hidden="true">event</mat-icon>{{ a.next_interview | date: 'MMM d, h:mm a' }}</div> }
@@ -69,10 +69,10 @@ interface Board { stages: Stage[]; items: Application[]; followUps: FollowUp[] }
         <tbody>
           @for (a of items(); track a.id) {
             <tr><td><button class="c-title" type="button" (click)="open(a.id)">{{ a.job_title }}</button></td><td>{{ a.company }}</td>
-              <td><mat-select [value]="a.status" (selectionChange)="moveTo(a, $event.value)" style="width:120px" [aria-label]="'Stage for ' + a.job_title">@for (t of stages; track t) { <mat-option [value]="t">{{ label(t) }}</mat-option> }</mat-select></td>
+              <td><mat-select class="w-120" [value]="a.status" (selectionChange)="moveTo(a, $event.value)" [aria-label]="'Stage for ' + a.job_title">@for (t of stages; track t) { <mat-option [value]="t">{{ label(t) }}</mat-option> }</mat-select></td>
               <td>{{ a.applied_at ? (a.applied_at | date: 'mediumDate') : '–' }}</td><td [class.due]="a.follow_up_at && isDue(a.follow_up_at)">{{ a.follow_up_at ? (a.follow_up_at | date: 'mediumDate') : '–' }}</td>
               <td>{{ a.next_interview ? (a.next_interview | date: 'MMM d, h:mm a') : '–' }}</td><td>{{ a.resume_title ? a.resume_title + ' v' + a.version_no : '–' }}</td></tr>
-          } @empty { <tr><td colspan="7" class="muted" style="padding:24px; text-align:center">Nothing tracked yet. Add your first application.</td></tr> }
+          } @empty { <tr><td colspan="7" class="muted p-6 text-center">Nothing tracked yet. Add your first application.</td></tr> }
         </tbody>
       </table></div></section>
     }

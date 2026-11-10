@@ -20,7 +20,7 @@ interface MatchPayload { items: JobMatch[]; hasProfile: boolean; disclaimer: str
     <div class="page-head">
       <div><h1>Best matches</h1><p>Listings ranked by how closely they compare with your default resume and preferences.</p></div>
       <div class="actions">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:170px"><mat-label>Minimum score</mat-label>
+        <mat-form-field class="w-170" appearance="outline" subscriptSizing="dynamic"><mat-label>Minimum score</mat-label>
           <mat-select [formControl]="min"><mat-option [value]="0">Any</mat-option><mat-option [value]="50">50+</mat-option><mat-option [value]="65">65+</mat-option><mat-option [value]="80">80+</mat-option></mat-select>
         </mat-form-field>
         <button mat-stroked-button type="button" (click)="refresh()"><mat-icon>refresh</mat-icon>Recalculate</button>
@@ -32,9 +32,9 @@ interface MatchPayload { items: JobMatch[]; hasProfile: boolean; disclaimer: str
     @else if (!hasProfile()) { <div class="card"><app-empty icon="description" title="Add a resume to see matches" text="We compare your default resume and profile with the job listings we have." actionLabel="Add a resume" actionLink="/resumes" /></div> }
     @else {
       @for (j of items(); track j.id) {
-        <div class="m card" style="padding:0; overflow:hidden">
+        <div class="m card card-tight">
           <app-job-card [job]="j" (toggleSave)="toggleSave($event)" />
-          <div style="padding:16px">@if (j.breakdown) { <app-match-panel [m]="j.breakdown" /> }</div>
+          <div class="p-4">@if (j.breakdown) { <app-match-panel [m]="j.breakdown" /> }</div>
         </div>
       } @empty { <div class="card"><app-empty icon="search_off" title="No matches at this score" text="Lower the minimum score, or ask an administrator to sync more job sources." /></div> }
       @if (meta() && meta()!.totalPages > 1) {

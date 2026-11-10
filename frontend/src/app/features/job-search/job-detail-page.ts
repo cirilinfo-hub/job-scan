@@ -28,35 +28,35 @@ import { UI } from '../../shared/ui';
       @if (j.is_demo) { <div class="notice warning"><mat-icon aria-hidden="true">science</mat-icon><div>This is an invented listing for testing. It isn't a real job.</div></div> }
       <div class="grid split">
         <div class="stack">
-          <section class="card"><h2 style="margin-bottom:8px">Job description</h2><pre class="small" style="line-height:1.6">{{ j.description }}</pre></section>
+          <section class="card"><h2 class="mb-2">Job description</h2><pre class="small lh-relaxed">{{ j.description }}</pre></section>
         </div>
         <div class="stack">
           <section class="card stack-sm small">
-            <h2 style="margin-bottom:6px">Details</h2>
+            <h2 class="mb-2">Details</h2>
             @if (j.posted_at) { <div><span class="muted">Posted:</span> {{ j.posted_at | date: 'mediumDate' }}</div> }
             @if (salary()) { <div><span class="muted">Salary:</span> {{ salary() }}</div> }
             @if (j.min_years !== null) { <div><span class="muted">Experience:</span> {{ j.min_years }}+ years</div> }
             @if (level()) { <div><span class="muted">Level:</span> {{ level() }} <span class="muted xs">(inferred)</span></div> }
             @if (j.category) { <div><span class="muted">Category:</span> {{ j.category }}</div> }
-            @if (!j.is_demo) { <div class="xs muted" style="margin-top:8px">{{ j.source_attribution }} @if (j.source_homepage) { <a [href]="j.source_homepage" target="_blank" rel="noopener noreferrer">Visit {{ j.source_name }}</a> }</div> }
+            @if (!j.is_demo) { <div class="xs muted mt-2">{{ j.source_attribution }} @if (j.source_homepage) { <a [href]="j.source_homepage" target="_blank" rel="noopener noreferrer">Visit {{ j.source_name }}</a> }</div> }
           </section>
           @if (j.company_description || j.company_website) {
             <section class="card small stack-sm"><h2>About {{ j.company }}</h2><div>{{ j.company_description }}</div>@if (j.company_website) { <a [href]="j.company_website" target="_blank" rel="noopener noreferrer">Company website</a> }</section>
           }
           <section class="card stack">
             <h2>Skills listed</h2>
-            @if (required().length) { <div><h3 class="muted small" style="margin-bottom:4px">Required</h3><div class="chips">@for (s of required(); track s.id) { <span class="chip">{{ s.name }}</span> }</div></div> }
-            @if (preferred().length) { <div><h3 class="muted small" style="margin-bottom:4px">Preferred</h3><div class="chips">@for (s of preferred(); track s.id) { <span class="chip">{{ s.name }}</span> }</div></div> }
+            @if (required().length) { <div><h3 class="muted small mb-1">Required</h3><div class="chips">@for (s of required(); track s.id) { <span class="chip">{{ s.name }}</span> }</div></div> }
+            @if (preferred().length) { <div><h3 class="muted small mb-1">Preferred</h3><div class="chips">@for (s of preferred(); track s.id) { <span class="chip">{{ s.name }}</span> }</div></div> }
             @if (!j.skills.length) { <p class="muted small">No catalogued skills recognised in this listing.</p> }
           </section>
           <section class="card">
-            <h2 style="margin-bottom:8px">Match analysis</h2>
+            <h2 class="mb-2">Match analysis</h2>
             @if (j.breakdown) {
               <app-match-panel [m]="j.breakdown" />
               @if (ai.available()) {
-                <hr class="divider" style="margin:12px 0" />
+                <hr class="divider my-3" />
                 <button mat-stroked-button type="button" [disabled]="aiBusy()" (click)="explain()"><mat-icon>auto_awesome</mat-icon>{{ aiBusy() ? 'Thinking...' : 'Explain with AI' }}</button>
-                @if (fit(); as f) { <div class="small stack-sm" style="margin-top:8px"><p>{{ f.relevance }}</p>@for (g of f.gaps; track g) { <div class="muted">Gap: {{ g }}</div> }@for (n of f.nextSteps; track n) { <div>Next: {{ n }}</div> }<p class="muted xs">AI-generated. Check it against what you know about your experience.</p></div> }
+                @if (fit(); as f) { <div class="small stack-sm mt-2"><p>{{ f.relevance }}</p>@for (g of f.gaps; track g) { <div class="muted">Gap: {{ g }}</div> }@for (n of f.nextSteps; track n) { <div>Next: {{ n }}</div> }<p class="muted xs">AI-generated. Check it against what you know about your experience.</p></div> }
               }
             } @else { <app-empty icon="stars" title="No match yet" text="Add a resume to compare it with this job." actionLabel="Add a resume" actionLink="/resumes" /> }
           </section>

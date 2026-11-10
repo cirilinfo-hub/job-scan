@@ -26,7 +26,7 @@ interface VersionOption { id: number; label: string }
   <mat-dialog-content>
     <mat-tab-group [mat-stretch-tabs]="false">
       <mat-tab label="Details">
-        <form [formGroup]="form" class="form-grid" style="padding-top:12px" id="appForm" (ngSubmit)="save()">
+        <form [formGroup]="form" class="form-grid pt-3" id="appForm" (ngSubmit)="save()">
           <mat-form-field appearance="outline"><mat-label>Company</mat-label><input matInput formControlName="company" /><mat-error>Enter the company.</mat-error></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Job title</mat-label><input matInput formControlName="jobTitle" /><mat-error>Enter the job title.</mat-error></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Location</mat-label><input matInput formControlName="location" /></mat-form-field>
@@ -43,24 +43,24 @@ interface VersionOption { id: number; label: string }
       </mat-tab>
       @if (detail(); as d) {
         <mat-tab [label]="'Notes (' + d.notes.length + ')'">
-          <div class="stack" style="padding-top:12px">
-            <div class="row" style="align-items:flex-start">
-              <mat-form-field appearance="outline" style="flex:1 1 240px"><mat-label>Add a note</mat-label><textarea matInput rows="2" [formControl]="note"></textarea></mat-form-field>
-              <button mat-stroked-button type="button" style="margin-top:6px" (click)="addNote()">Add note</button>
+          <div class="stack pt-3">
+            <div class="row items-start">
+              <mat-form-field class="flex-240" appearance="outline"><mat-label>Add a note</mat-label><textarea matInput rows="2" [formControl]="note"></textarea></mat-form-field>
+              <button class="mt-2" mat-stroked-button type="button" (click)="addNote()">Add note</button>
             </div>
             @for (n of d.notes; track n.id) {
-              <div class="row" style="flex-wrap:nowrap; align-items:flex-start"><div class="grow small"><pre>{{ n.body }}</pre><div class="muted xs">{{ n.created_at | date: 'MMM d, y, h:mm a' }}</div></div>
+              <div class="row nowrap items-start"><div class="grow small"><pre>{{ n.body }}</pre><div class="muted xs">{{ n.created_at | date: 'MMM d, y, h:mm a' }}</div></div>
                 <button mat-icon-button type="button" aria-label="Delete note" (click)="removeNote(n.id)"><mat-icon>delete_outline</mat-icon></button></div>
             } @empty { <p class="muted small">No notes yet.</p> }
           </div>
         </mat-tab>
         <mat-tab [label]="'Interviews (' + d.interviews.length + ')'">
-          <div class="stack" style="padding-top:12px">
+          <div class="stack pt-3">
             <form [formGroup]="iv" class="form-grid" (ngSubmit)="addInterview()">
               <mat-form-field appearance="outline"><mat-label>Date and time</mat-label><input matInput type="datetime-local" formControlName="scheduledAt" /><mat-error>Choose a date and time.</mat-error></mat-form-field>
               <mat-form-field appearance="outline"><mat-label>Type</mat-label><mat-select formControlName="kind"><mat-option value="phone screen">Phone screen</mat-option><mat-option value="technical interview">Technical</mat-option><mat-option value="interview">Interview</mat-option><mat-option value="final interview">Final</mat-option></mat-select></mat-form-field>
               <mat-form-field appearance="outline"><mat-label>Location or link</mat-label><input matInput formControlName="location" /></mat-form-field>
-              <div style="padding-top:6px"><button mat-stroked-button type="submit">Schedule</button></div>
+              <div class="pt-2"><button mat-stroked-button type="submit">Schedule</button></div>
             </form>
             @for (i of d.interviews; track i.id) {
               <div class="row between small"><div><div class="strong">{{ i.scheduled_at | date: 'EEE, MMM d, y, h:mm a' }}</div><div class="muted xs">{{ i.kind }}@if (i.location) { · {{ i.location }} }</div></div>
@@ -69,7 +69,7 @@ interface VersionOption { id: number; label: string }
           </div>
         </mat-tab>
         <mat-tab label="History">
-          <div style="padding-top:12px">
+          <div class="pt-3">
             @for (h of d.history; track h.id) { <div class="log"><span>{{ h.from_status ? stage(h.from_status) + ' to ' : 'Added as ' }}{{ stage(h.to_status) }}</span><span class="muted">{{ h.changed_at | date: 'MMM d, y, h:mm a' }}</span></div> }
           </div>
         </mat-tab>
@@ -78,7 +78,7 @@ interface VersionOption { id: number; label: string }
   </mat-dialog-content>
   <mat-dialog-actions>
     @if (data.id) { <button mat-button type="button" (click)="remove()">Delete</button> }
-    <span style="flex:1"></span>
+    <span class="flex-1"></span>
     <button mat-button type="button" mat-dialog-close>Close</button>
     <button mat-flat-button type="submit" form="appForm" [disabled]="busy()">{{ data.id ? 'Save changes' : 'Add application' }}</button>
   </mat-dialog-actions>`,

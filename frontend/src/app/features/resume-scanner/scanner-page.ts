@@ -14,8 +14,8 @@ import { UI } from '../../shared/ui';
     <div class="page-head"><div><h1>Resume scanner</h1><p>Compare a resume with a job description to see what matches and what's missing.</p></div></div>
     <div class="grid split">
       <form class="card" [formGroup]="form" (ngSubmit)="run()">
-        <h2 style="margin-bottom:12px">New scan</h2>
-        <div class="row" style="align-items:flex-start; flex-wrap:nowrap">
+        <h2 class="mb-3">New scan</h2>
+        <div class="row items-start nowrap">
           <mat-form-field appearance="outline" class="grow"><mat-label>Resume</mat-label>
             <mat-select formControlName="resumeId">
               @for (r of resumes(); track r.id) { <mat-option [value]="r.id">{{ r.title }}@if (r.is_default) { (default) }</mat-option> }
@@ -23,7 +23,7 @@ import { UI } from '../../shared/ui';
             <mat-error>Choose a resume or upload one.</mat-error>
           </mat-form-field>
           <input #file type="file" hidden accept=".pdf,.docx" (change)="upload($event)" />
-          <button mat-stroked-button type="button" style="margin-top:6px; flex:none" [disabled]="uploading()" (click)="file.click()"><mat-icon>upload_file</mat-icon>{{ uploading() ? 'Uploading...' : 'Upload' }}</button>
+          <button class="mt-2 flex-none" mat-stroked-button type="button" [disabled]="uploading()" (click)="file.click()"><mat-icon>upload_file</mat-icon>{{ uploading() ? 'Uploading...' : 'Upload' }}</button>
         </div>
         <div class="form-grid">
           <mat-form-field appearance="outline"><mat-label>Company (optional)</mat-label><input matInput formControlName="company" /></mat-form-field>
@@ -31,21 +31,21 @@ import { UI } from '../../shared/ui';
         </div>
         <mat-form-field appearance="outline"><mat-label>Job description</mat-label><textarea matInput rows="12" formControlName="jobDescription"></textarea><mat-error>Paste the full job description (at least 50 characters).</mat-error></mat-form-field>
         <button mat-flat-button type="submit" [disabled]="busy()">{{ busy() ? 'Scanning...' : 'Scan resume' }}</button>
-        <p class="muted xs" style="margin-top:12px">The result is an estimate from our published rules. It isn't the score of an employer's system and doesn't predict an interview or a job offer.</p>
+        <p class="muted xs mt-3">The result is an estimate from our published rules. It isn't the score of an employer's system and doesn't predict an interview or a job offer.</p>
       </form>
       <section class="card">
-        <h2 style="margin-bottom:8px">Scan history</h2>
+        <h2 class="mb-2">Scan history</h2>
         <div class="list">
           @for (s of history(); track s.id) {
             <div class="list-item">
               <app-score [value]="s.overall_score" [size]="40" label="Estimated match" />
-              <a class="grow" style="color:inherit; min-width:0" [routerLink]="['/scanner', s.id]"><div class="li-title truncate">{{ s.job_title }}</div><div class="muted xs truncate">{{ s.company || 'No company' }} · {{ s.created_at | date: 'mediumDate' }}</div></a>
+              <a class="grow inherit min-w-0" [routerLink]="['/scanner', s.id]"><div class="li-title truncate">{{ s.job_title }}</div><div class="muted xs truncate">{{ s.company || 'No company' }} · {{ s.created_at | date: 'mediumDate' }}</div></a>
               <button mat-icon-button type="button" (click)="remove(s)" [attr.aria-label]="'Delete scan for ' + s.job_title" matTooltip="Delete"><mat-icon>delete_outline</mat-icon></button>
             </div>
           } @empty { <app-empty icon="history" title="No scans yet" text="Your results will appear here." /> }
         </div>
         @if (meta() && meta()!.totalPages > 1) {
-          <div class="row between" style="margin-top:8px">
+          <div class="row between mt-2">
             <button mat-button type="button" [disabled]="page() <= 1" (click)="loadHistory(page() - 1)">Previous</button>
             <span class="muted xs">Page {{ page() }} of {{ meta()!.totalPages }}</span>
             <button mat-button type="button" [disabled]="page() >= meta()!.totalPages" (click)="loadHistory(page() + 1)">Next</button>

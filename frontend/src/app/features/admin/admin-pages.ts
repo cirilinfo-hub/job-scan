@@ -39,8 +39,8 @@ interface Overview {
         <app-stat-card label="Estimated AI cost" [value]="d.ai.estimatedCostUsd === null ? 'Not tracked' : '$' + d.ai.estimatedCostUsd.toFixed(2)" icon="payments" [hint]="(d.ai.inputTokens + d.ai.outputTokens | number) + ' tokens'" link="/admin/ai" />
       </div>
       <div class="grid g2">
-        <section class="card"><h2 style="margin-bottom:8px">New users per day</h2>@if (d.signups.length) { <app-bar-chart [labels]="days2(d.signups)" [values]="vals(d.signups)" label="New users per day" seriesName="New users" /> } @else { <p class="muted small">No signups in this period.</p> }</section>
-        <section class="card"><h2 style="margin-bottom:8px">Scans per day</h2>@if (d.scansDaily.length) { <app-bar-chart [labels]="days2(d.scansDaily)" [values]="vals(d.scansDaily)" label="Scans per day" seriesName="Scans" /> } @else { <p class="muted small">No scans in this period.</p> }</section>
+        <section class="card"><h2 class="mb-2">New users per day</h2>@if (d.signups.length) { <app-bar-chart [labels]="days2(d.signups)" [values]="vals(d.signups)" label="New users per day" seriesName="New users" /> } @else { <p class="muted small">No signups in this period.</p> }</section>
+        <section class="card"><h2 class="mb-2">Scans per day</h2>@if (d.scansDaily.length) { <app-bar-chart [labels]="days2(d.scansDaily)" [values]="vals(d.scansDaily)" label="Scans per day" seriesName="Scans" /> } @else { <p class="muted small">No scans in this period.</p> }</section>
       </div>
       <section class="card card-tight"><div class="table-wrap"><table class="tbl"><caption class="sr-only">AI usage by feature</caption>
         <thead><tr><th>AI feature</th><th>Calls</th><th>Estimated cost</th></tr></thead>
@@ -64,7 +64,6 @@ interface Plan { id: number; code: string; name: string; price_cents: number; cu
 /** DataTable: a sortable, searchable, paginated table. */
 @Component({
   imports: [UI, StatusBadge],
-  styles: `th button { all: unset; cursor: pointer; } th button:focus-visible { outline: 2px solid var(--accent); }`,
   template: `<div class="page">
     <div class="page-head"><div><h1>Users</h1></div></div>
     <form class="card form-grid" (submit)="$event.preventDefault(); load(1)">
@@ -177,7 +176,7 @@ interface Source { id: number; code: string; name: string; homepage: string | nu
     <div class="grid g3">
       @for (s of items(); track s.id) {
         <section class="card stack">
-          <div class="row between" style="flex-wrap:nowrap"><h2>{{ s.name }}</h2>@if (s.hasAdapter) { <mat-slide-toggle [checked]="!!s.is_enabled" (change)="toggle(s, $event)" [aria-label]="'Enable ' + s.name" /> }</div>
+          <div class="row between nowrap"><h2>{{ s.name }}</h2>@if (s.hasAdapter) { <mat-slide-toggle [checked]="!!s.is_enabled" (change)="toggle(s, $event)" [aria-label]="'Enable ' + s.name" /> }</div>
           <div class="small muted">{{ s.attribution }}</div>
           @if (s.homepage) { <a class="small" [href]="s.homepage" target="_blank" rel="noopener noreferrer">{{ s.homepage }}</a> }
           <div class="small">{{ s.job_count | number }} active listings</div>
@@ -209,9 +208,9 @@ export class AdminSourcesPage implements OnInit {
   imports: [UI],
   template: `<div class="page page-narrow">
     <div class="page-head"><div><h1>Job categories</h1><p>Categories are created during job sync, and you can add your own.</p></div></div>
-    <form class="card row" (submit)="$event.preventDefault(); add()" style="align-items:flex-start"><mat-form-field appearance="outline" subscriptSizing="dynamic" style="flex:1 1 220px"><mat-label>New category</mat-label><input matInput [formControl]="name" /></mat-form-field><button mat-flat-button type="submit" style="margin-top:6px">Add</button></form>
+    <form class="card row items-start" (submit)="$event.preventDefault(); add()"><mat-form-field class="flex-220" appearance="outline" subscriptSizing="dynamic"><mat-label>New category</mat-label><input matInput [formControl]="name" /></mat-form-field><button class="mt-2" mat-flat-button type="submit">Add</button></form>
     <section class="card card-tight"><div class="table-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Jobs</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>
-      @for (c of items(); track c.id) { <tr><td>{{ c.name }}</td><td>{{ c.job_count }}</td><td style="text-align:right"><button mat-icon-button type="button" (click)="remove(c)" [attr.aria-label]="'Delete ' + c.name"><mat-icon>delete_outline</mat-icon></button></td></tr> } @empty { <tr><td colspan="3" class="muted">No categories yet.</td></tr> }
+      @for (c of items(); track c.id) { <tr><td>{{ c.name }}</td><td>{{ c.job_count }}</td><td class="text-right"><button mat-icon-button type="button" (click)="remove(c)" [attr.aria-label]="'Delete ' + c.name"><mat-icon>delete_outline</mat-icon></button></td></tr> } @empty { <tr><td colspan="3" class="muted">No categories yet.</td></tr> }
     </tbody></table></div></section>
   </div>`,
 })
@@ -234,11 +233,11 @@ interface SkillRow { id: number; name: string; type: string; aliases: string[]; 
       <mat-form-field appearance="outline"><mat-label>Skill name</mat-label><input matInput formControlName="name" /><mat-error>Enter a name.</mat-error></mat-form-field>
       <mat-form-field appearance="outline"><mat-label>Type</mat-label><mat-select formControlName="type"><mat-option value="hard">Technical</mat-option><mat-option value="tool">Tool</mat-option><mat-option value="soft">Soft</mat-option><mat-option value="certification">Certification</mat-option></mat-select></mat-form-field>
       <mat-form-field appearance="outline"><mat-label>Other names</mat-label><input matInput formControlName="aliases" /><mat-hint>Separate with commas</mat-hint></mat-form-field>
-      <div class="row" style="padding-top:6px; align-items:flex-start"><button mat-flat-button type="submit">{{ editId() ? 'Save skill' : 'Add skill' }}</button>@if (editId()) { <button mat-button type="button" (click)="cancel()">Cancel</button> }</div>
+      <div class="row pt-2 items-start"><button mat-flat-button type="submit">{{ editId() ? 'Save skill' : 'Add skill' }}</button>@if (editId()) { <button mat-button type="button" (click)="cancel()">Cancel</button> }</div>
     </form>
     <form class="card" (submit)="$event.preventDefault(); load(1)"><mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Search skills</mat-label><input matInput [formControl]="q" /></mat-form-field></form>
     <section class="card card-tight"><div class="table-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Type</th><th>Other names</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>
-      @for (s of items(); track s.id) { <tr><td class="strong">{{ s.name }}</td><td>{{ s.type }}</td><td>{{ s.aliases.join(', ') }}</td><td style="text-align:right; white-space:nowrap"><button mat-icon-button type="button" (click)="edit(s)" [attr.aria-label]="'Edit ' + s.name"><mat-icon>edit</mat-icon></button><button mat-icon-button type="button" (click)="remove(s)" [attr.aria-label]="'Delete ' + s.name"><mat-icon>delete_outline</mat-icon></button></td></tr> } @empty { <tr><td colspan="4" class="muted">No skills found.</td></tr> }
+      @for (s of items(); track s.id) { <tr><td class="strong">{{ s.name }}</td><td>{{ s.type }}</td><td>{{ s.aliases.join(', ') }}</td><td class="text-right ws-nowrap"><button mat-icon-button type="button" (click)="edit(s)" [attr.aria-label]="'Edit ' + s.name"><mat-icon>edit</mat-icon></button><button mat-icon-button type="button" (click)="remove(s)" [attr.aria-label]="'Delete ' + s.name"><mat-icon>delete_outline</mat-icon></button></td></tr> } @empty { <tr><td colspan="4" class="muted">No skills found.</td></tr> }
     </tbody></table></div></section>
     @if (meta(); as m) { <nav class="row between" aria-label="Pagination"><button mat-stroked-button type="button" [disabled]="m.page <= 1" (click)="load(m.page - 1)">Previous</button><span class="muted small">{{ m.total }} skills · Page {{ m.page }} of {{ m.totalPages }}</span><button mat-stroked-button type="button" [disabled]="m.page >= m.totalPages" (click)="load(m.page + 1)">Next</button></nav> }
   </div>`,
@@ -326,7 +325,7 @@ export class AdminAiPage implements OnInit {
     <div class="page-head"><div><h1>Scoring rules</h1><p>These numbers drive every new scan. Existing reports keep the rules they were calculated with.@if (!auth.isSuperAdmin()) { Only a super admin can change these. }</p></div></div>
     @if (json()) {
       <section class="card stack">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Rules (JSON)</mat-label><textarea matInput rows="26" [formControl]="text" style="font-family:ui-monospace,monospace; font-size:13px" spellcheck="false"></textarea></mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Rules (JSON)</mat-label><textarea class="mono" matInput rows="26" [formControl]="text" spellcheck="false"></textarea></mat-form-field>
         @if (bad()) { <div class="notice danger" role="alert">{{ bad() }}</div> }
         @if (auth.isSuperAdmin()) { <div><button mat-flat-button type="button" (click)="save()">Save rules</button></div> }
       </section>
@@ -358,7 +357,7 @@ interface LogRow { id: number; level: string; action: string; target: string | n
       <div class="row"><button mat-stroked-button type="submit">Filter</button></div>
     </form>
     <section class="card card-tight"><div class="table-wrap"><table class="tbl"><thead><tr><th>Time</th><th>Level</th><th>Action</th><th>Target</th><th>By</th><th>IP</th></tr></thead><tbody>
-      @for (l of items(); track l.id) { <tr><td style="white-space:nowrap">{{ l.created_at | date: 'MMM d, HH:mm:ss' }}</td><td><app-status [status]="l.level" /></td><td>{{ l.action }}</td><td>{{ l.target || '–' }}</td><td>{{ l.actor || 'System' }}</td><td>{{ l.ip || '–' }}</td></tr> } @empty { <tr><td colspan="6" class="muted">No log entries.</td></tr> }
+      @for (l of items(); track l.id) { <tr><td class="ws-nowrap">{{ l.created_at | date: 'MMM d, HH:mm:ss' }}</td><td><app-status [status]="l.level" /></td><td>{{ l.action }}</td><td>{{ l.target || '–' }}</td><td>{{ l.actor || 'System' }}</td><td>{{ l.ip || '–' }}</td></tr> } @empty { <tr><td colspan="6" class="muted">No log entries.</td></tr> }
     </tbody></table></div></section>
     @if (meta(); as m) { <nav class="row between" aria-label="Pagination"><button mat-stroked-button type="button" [disabled]="m.page <= 1" (click)="load(m.page - 1)">Previous</button><span class="muted small">Page {{ m.page }} of {{ m.totalPages }}</span><button mat-stroked-button type="button" [disabled]="m.page >= m.totalPages" (click)="load(m.page + 1)">Next</button></nav> }
   </div>`,
@@ -376,8 +375,8 @@ export class AdminLogsPage implements OnInit {
     <div class="page-head"><div><h1>Settings</h1>@if (!auth.isSuperAdmin()) { <p>Only a super admin can change these.</p> }</div></div>
     <form class="card" [formGroup]="form" (ngSubmit)="save()">
       <mat-form-field appearance="outline"><mat-label>Support email</mat-label><input matInput type="email" formControlName="supportEmail" /><mat-hint>Shown in the account menu</mat-hint></mat-form-field>
-      <mat-form-field appearance="outline" style="margin-top:8px"><mat-label>Announcement</mat-label><input matInput formControlName="announcement" maxlength="300" /><mat-hint>Shown to everyone at the top of the workspace. Leave empty to hide it.</mat-hint></mat-form-field>
-      <div style="height:12px"></div>
+      <mat-form-field class="mt-2" appearance="outline"><mat-label>Announcement</mat-label><input matInput formControlName="announcement" maxlength="300" /><mat-hint>Shown to everyone at the top of the workspace. Leave empty to hide it.</mat-hint></mat-form-field>
+      <div class="h-12"></div>
       @if (auth.isSuperAdmin()) { <button mat-flat-button type="submit">Save settings</button> }
     </form>
   </div>`,

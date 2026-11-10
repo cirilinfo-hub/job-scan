@@ -7,7 +7,7 @@ import { ProgressBar, ScoreIndicator, scoreTone } from './widgets';
   styles: `.l { display: grid; grid-template-columns: 110px 1fr 28px; gap: 8px; align-items: center; font-size: 12px; } h3 { margin: 8px 0 4px; font-size: 13px; }`,
   template: `@let b = m();
   <div class="stack small">
-    <div class="row" style="flex-wrap:nowrap"><app-score [value]="b.score" [size]="56" label="Match score" /><span class="muted xs">{{ b.disclaimer }}</span></div>
+    <div class="row nowrap"><app-score [value]="b.score" [size]="56" label="Match score" /><span class="muted xs">{{ b.disclaimer }}</span></div>
     <div class="stack-sm">
       @for (c of b.components; track c.key) {
         <div class="l"><span>{{ c.label }}</span>

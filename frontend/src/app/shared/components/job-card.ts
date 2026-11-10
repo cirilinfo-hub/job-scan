@@ -18,9 +18,9 @@ export const niceEnum = (s: string) => (s === 'unknown' ? '' : (s[0].toUpperCase
   selector: 'app-job-card', imports: [DatePipe, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, ScoreIndicator], changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `.j { display: flex; flex-direction: column; gap: 10px; height: 100%; }
     .top { display: flex; gap: 12px; align-items: flex-start; }
-    .logo { flex: none; width: 40px; height: 40px; border-radius: 8px; background: var(--surface-2); display: grid; place-items: center; font-weight: 600; color: var(--text-2); overflow: hidden; }
+    .logo { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-weight: 600; color: var(--text-2); overflow: hidden; }
     .logo img { width: 100%; height: 100%; object-fit: contain; }
-    .title { font-weight: 600; color: var(--text); display: block; } .title:hover { color: var(--accent); }
+    .title { font-weight: 600; font-size: 16px; letter-spacing: -0.01em; color: var(--text); display: block; } .title:hover { color: var(--accent); }
     .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--text-2); font-size: 13px; } .meta span { display: inline-flex; gap: 4px; align-items: center; } .meta .material-icons { font-size: 15px; width: 15px; height: 15px; }
     .sum { color: var(--text-2); font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }`,

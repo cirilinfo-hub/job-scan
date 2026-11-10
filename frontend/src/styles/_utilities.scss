@@ -1,0 +1,58 @@
+@use 'mixins' as m;
+
+// Small single-purpose classes for layout tweaks, so templates don't need inline styles.
+// Spacing steps follow the 4px grid: 1 = 4px, 2 = 8px, 3 = 12px, 4 = 16px, 6 = 24px.
+
+$steps: (0: 0, 1: 4px, 2: 8px, 3: 12px, 4: 16px, 6: 24px);
+@each $k, $v in $steps {
+  @include m.utility('mt-#{$k}') { margin-top: $v; }
+  @include m.utility('mb-#{$k}') { margin-bottom: $v; }
+  @include m.utility('my-#{$k}') { margin-top: $v; margin-bottom: $v; }
+  @include m.utility('ml-#{$k}') { margin-left: $v; }
+  @include m.utility('pt-#{$k}') { padding-top: $v; }
+  @include m.utility('pb-#{$k}') { padding-bottom: $v; }
+  @include m.utility('py-#{$k}') { padding-top: $v; padding-bottom: $v; }
+  @include m.utility('p-#{$k}') { padding: $v; }
+  @include m.utility('gap-#{$k}') { gap: $v; }
+}
+@include m.utility('mt-auto') { margin-top: auto; }
+@include m.utility('indent-40') { margin-left: 40px; }
+
+@include m.utility('nowrap') { flex-wrap: nowrap; }
+@include m.utility('items-start') { align-items: flex-start; }
+@include m.utility('items-center') { align-items: center; }
+@include m.utility('justify-end') { justify-content: flex-end; }
+@include m.utility('justify-center') { justify-content: center; }
+@include m.utility('flex-1') { flex: 1; }
+@include m.utility('flex-none') { flex: none; }
+@include m.utility('flex-200') { flex: 1 1 200px; }
+@include m.utility('flex-220') { flex: 1 1 220px; }
+@include m.utility('flex-240') { flex: 1 1 240px; }
+@include m.utility('basis-320') { flex-basis: 320px; }
+@include m.utility('min-w-0') { min-width: 0; }
+@include m.utility('h-full') { height: 100%; }
+@include m.utility('h-12') { height: 12px; }
+@include m.utility('w-120') { width: 120px; }
+@include m.utility('w-170') { width: 170px; }
+@include m.utility('w-190') { width: 190px; }
+@include m.utility('maxw-820') { max-width: 820px; }
+@include m.utility('inline') { display: inline; }
+
+@include m.utility('text-right') { text-align: right; }
+@include m.utility('text-center') { text-align: center; }
+@include m.utility('ws-nowrap') { white-space: nowrap; }
+@include m.utility('capitalize') { text-transform: capitalize; }
+@include m.utility('lh-relaxed') { line-height: 1.6; }
+@include m.utility('fs-16') { font-size: 16px; }
+@include m.utility('text-danger') { color: var(--danger); }
+@include m.utility('text-accent') { color: var(--accent); }
+@include m.utility('inherit') { color: inherit; }
+@include m.utility('pointer') { cursor: pointer; }
+
+// Icon sizes for mat-icon.
+@each $s in (14, 16, 18, 20) {
+  @include m.utility('icon-#{$s}') { font-size: #{$s}px; width: #{$s}px; height: #{$s}px; }
+}
+
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

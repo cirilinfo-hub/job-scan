@@ -14,10 +14,10 @@ interface LoadResult { version: ResumeVersion; suggestions: Suggestion[]; ai: { 
 
 @Component({
   imports: [UI, MatDialogModule, ResumeEditor, AiNotice, EmptyState, LoadingSkeleton, ScoreIndicator, StatusBadge],
-  styles: `.sug { border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .before { text-decoration: line-through; color: var(--text-2); font-size: 13px; } .after { font-size: 13px; background: var(--success-soft); padding: 6px 8px; border-radius: 6px; }
+  styles: `.sug { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: 8px; }
+    .before { text-decoration: line-through; color: var(--text-2); font-size: 13px; } .after { font-size: 13px; background: var(--success-soft); padding: 6px 8px; border-radius: var(--radius-sm); }
     .kind { text-transform: capitalize; } .delta { font-weight: 600; } .up { color: var(--success); } .down { color: var(--danger); }
-    .confirm { font-size: 13px; background: var(--warning-soft); padding: 6px 10px; border-radius: 6px; } textarea.edit { width: 100%; font: inherit; font-size: 13px; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }`,
+    .confirm { font-size: 13px; background: var(--warning-soft); padding: 6px 10px; border-radius: var(--radius-sm); } textarea.edit { width: 100%; font: inherit; font-size: 13px; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); border: 1.5px solid var(--border-strong); background: var(--surface); color: var(--text); }`,
   template: `<div class="page">
     <div class="page-head">
       <div><h1>Resume optimizer</h1><p>Review each suggestion. Nothing changes on your resume unless you accept it and save.</p></div>
@@ -38,13 +38,13 @@ interface LoadResult { version: ResumeVersion; suggestions: Suggestion[]; ai: { 
           </div>
           @if (showCompare()) {
             <div class="grid split-even">
-              <div><h3 style="margin-bottom:6px">Before</h3><pre class="side-text">{{ beforeText() }}</pre></div>
-              <div><h3 style="margin-bottom:6px">After</h3><pre class="side-text">{{ afterText() }}</pre></div>
+              <div><h3 class="mb-2">Before</h3><pre class="side-text">{{ beforeText() }}</pre></div>
+              <div><h3 class="mb-2">After</h3><pre class="side-text">{{ afterText() }}</pre></div>
             </div>
           } @else { <app-resume-editor [value]="draft" (changed)="edit($event)" /> }
-          <hr class="divider" style="margin:16px 0" />
+          <hr class="divider my-4" />
           <div class="row">
-            <mat-form-field appearance="outline" subscriptSizing="dynamic" style="flex:1 1 200px"><mat-label>Version name</mat-label><input matInput [formControl]="label" /></mat-form-field>
+            <mat-form-field class="flex-200" appearance="outline" subscriptSizing="dynamic"><mat-label>Version name</mat-label><input matInput [formControl]="label" /></mat-form-field>
             <button mat-flat-button type="button" [disabled]="saving() || !dirty()" (click)="save(false)">Save version</button>
             <button mat-stroked-button type="button" [disabled]="saving() || !dirty()" (click)="save(true)">Save as new resume</button>
             <button mat-stroked-button type="button" (click)="download('pdf')"><mat-icon>download</mat-icon>PDF</button>
@@ -57,12 +57,12 @@ interface LoadResult { version: ResumeVersion; suggestions: Suggestion[]; ai: { 
             <section class="card">
               <div class="row between"><h2>Estimated match</h2><button mat-stroked-button type="button" [disabled]="scoring()" (click)="rescore()"><mat-icon>calculate</mat-icon>{{ scoring() ? 'Calculating...' : 'Recalculate' }}</button></div>
               @if (score(); as sc) {
-                <div class="row" style="gap:16px; margin-top:12px">
+                <div class="row gap-4 mt-3">
                   <app-score [value]="sc.before" [size]="56" label="Before" /><mat-icon aria-hidden="true">arrow_forward</mat-icon><app-score [value]="sc.after" [size]="56" label="After" />
                   <span class="delta" [class.up]="sc.after > sc.before" [class.down]="sc.after < sc.before">{{ sc.after - sc.before > 0 ? '+' : '' }}{{ sc.after - sc.before }} points</span>
                 </div>
-                <p class="muted xs" style="margin-top:8px">An estimate from our rules, using your unsaved edits. It doesn't predict hiring.</p>
-              } @else { <p class="muted small" style="margin-top:6px">Accept or edit something, then recalculate to compare.</p> }
+                <p class="muted xs mt-2">An estimate from our rules, using your unsaved edits. It doesn't predict hiring.</p>
+              } @else { <p class="muted small mt-2">Accept or edit something, then recalculate to compare.</p> }
             </section>
           }
 
@@ -89,8 +89,8 @@ interface LoadResult { version: ResumeVersion; suggestions: Suggestion[]; ai: { 
               </div>
             } @empty { <p class="muted small">No suggestions waiting. Choose a target job for more.</p> }
             @if (done().length) {
-              <details class="small"><summary style="cursor:pointer">{{ done().length }} reviewed</summary>
-                @for (s of done(); track s.id) { <div class="row between" style="padding:4px 0; flex-wrap:nowrap"><span class="truncate grow">{{ s.finalText || s.suggested }}</span><app-status [status]="s.status" /></div> }
+              <details class="small"><summary class="pointer">{{ done().length }} reviewed</summary>
+                @for (s of done(); track s.id) { <div class="row between py-1 nowrap"><span class="truncate grow">{{ s.finalText || s.suggested }}</span><app-status [status]="s.status" /></div> }
               </details>
             }
           </section>

@@ -20,7 +20,7 @@ const family = (s: string) => s.replace(/-/g, ' ').replace(/^./, (c) => c.toUppe
   template: `<div class="page">
     <div class="page-head"><div><h1>Interview preparation</h1><p>Practise with common and role-specific questions, then review your answers.</p></div></div>
     <section class="card">
-      <h2 style="margin-bottom:8px">The STAR method</h2>
+      <h2 class="mb-2">The STAR method</h2>
       <div class="star">@for (s of guide()?.star; track s.key) { <div><div class="strong small">{{ s.label }}</div><div class="muted small">{{ s.hint }}</div></div> }</div>
     </section>
     <div class="grid split">
@@ -34,9 +34,9 @@ const family = (s: string) => s.replace(/-/g, ' ').replace(/^./, (c) => c.toUppe
           @for (q of questions(); track q.id) {
             <div class="q">
               <mat-checkbox [checked]="chosen().has(q.id)" (change)="toggle(q.id)"><span class="strong small">{{ q.question }}</span></mat-checkbox>
-              <div class="row" style="margin:2px 0 0 40px"><span class="badge">{{ cat[q.category] }}</span>@if (q.source === 'ai') { <app-status status="ai" /> }</div>
-              <details class="small" style="margin-left:40px"><summary style="cursor:pointer; color:var(--accent)">Guidance and sample outline</summary>
-                <p style="margin-top:4px">{{ q.guidance }}</p><p class="muted" style="margin-top:4px">{{ q.sample_answer }}</p></details>
+              <div class="row indent-40"><span class="badge">{{ cat[q.category] }}</span>@if (q.source === 'ai') { <app-status status="ai" /> }</div>
+              <details class="small indent-40"><summary class="pointer text-accent">Guidance and sample outline</summary>
+                <p class="mt-1">{{ q.guidance }}</p><p class="muted mt-1">{{ q.sample_answer }}</p></details>
             </div>
           } @empty { <p class="muted small">No questions match these filters.</p> }
         </div>
@@ -62,10 +62,10 @@ const family = (s: string) => s.replace(/-/g, ' ').replace(/^./, (c) => c.toUppe
           </form>
         } @else if (ai.available() === false) { <app-ai-notice text="The question bank and practice sessions still work." /> }
         <section class="card">
-          <h2 style="margin-bottom:8px">Past sessions</h2>
+          <h2 class="mb-2">Past sessions</h2>
           <div class="list">
             @for (s of sessions(); track s.id) {
-              <div class="list-item"><a class="grow" style="color:inherit; min-width:0" [routerLink]="['/interviews/session', s.id]"><div class="li-title truncate">{{ s.title }}</div><div class="muted xs">{{ s.answered }} of {{ s.total }} answered · {{ s.created_at | date: 'mediumDate' }}</div></a>
+              <div class="list-item"><a class="grow inherit min-w-0" [routerLink]="['/interviews/session', s.id]"><div class="li-title truncate">{{ s.title }}</div><div class="muted xs">{{ s.answered }} of {{ s.total }} answered · {{ s.created_at | date: 'mediumDate' }}</div></a>
                 <button mat-icon-button type="button" [attr.aria-label]="'Delete session ' + s.title" (click)="remove(s)"><mat-icon>delete_outline</mat-icon></button></div>
             } @empty { <p class="muted small">No sessions yet.</p> }
           </div>

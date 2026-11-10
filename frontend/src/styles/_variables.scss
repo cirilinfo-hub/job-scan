@@ -1,0 +1,41 @@
+// Spacing, shape, type scale and motion. A 4px base grid, large radii and soft studio shadows.
+
+:root {
+  --font-sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --radius-sm: 8px;      // chips, small controls
+  --radius-md: 16px;     // inputs, list cards, menus
+  --radius-lg: 24px;     // cards, tiles, dialogs
+  --radius-xl: 40px;     // hero panels
+  --radius-pill: 999px;  // buttons, nav items, icon buttons
+
+  // Older names some components still read.
+  --r-input: var(--radius-md);
+  --r-card: var(--radius-lg);
+  --r-dialog: var(--radius-lg);
+
+  --control-h: 40px;     // buttons and compact controls
+  --control-h-lg: 48px;
+  --header-h: 64px;
+  --sidebar-w: 248px;
+  --rail-w: 72px;
+
+  --ease: cubic-bezier(.2, 0, 0, 1);
+  --dur: 160ms;
+}
+
+// Sass copies for media queries, which can't read custom properties.
+$bp-mobile: 767px;
+$bp-tablet: 1023px;
+$bp-laptop: 1439px;

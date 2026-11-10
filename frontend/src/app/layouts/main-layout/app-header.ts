@@ -13,31 +13,32 @@ import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-header', imports: [ReactiveFormsModule, RouterLink, MatBadgeModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule], changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `header { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--border); }
-    form.search { flex: 1 1 auto; max-width: 420px; position: relative; display: flex; align-items: center; }
-    form.search .material-icons { position: absolute; left: 10px; font-size: 18px; width: 18px; height: 18px; color: var(--text-2); pointer-events: none; }
-    form.search input { width: 100%; height: 36px; padding: 0 10px 0 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; }
-    form.search input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  styles: `header { height: var(--header-h); display: flex; align-items: center; gap: var(--space-2); padding: 0 var(--space-8) 0 var(--space-4); background: var(--bg); }
+    form.search { flex: 1 1 auto; max-width: 440px; margin-left: var(--space-2); }
     .sp { flex: 1 1 auto; }
-    .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 13px; }
-    .who { padding: 8px 16px; max-width: 260px; }
+    .avatar-btn { all: unset; cursor: pointer; border-radius: 50%; margin-left: var(--space-1); }
+    .avatar-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 600; font-size: 14px; letter-spacing: .02em; }
+    .who { padding: var(--space-2) var(--space-4) var(--space-3); max-width: 280px; }
+    @media (max-width: 1023px) { header { padding-right: var(--space-6); } }
+    @media (max-width: 767px) { header { padding: 0 var(--space-4) 0 var(--space-2); gap: var(--space-1); } }
     @media (max-width: 480px) { form.search { display: none; } }`,
   template: `<header>
     <button mat-icon-button type="button" (click)="menu.emit()" aria-label="Toggle navigation" matTooltip="Toggle navigation"><mat-icon>menu</mat-icon></button>
     @if (showSearch() && config.enabled('job_search')) {
-      <form class="search" role="search" (submit)="search($event)">
+      <form class="search search-pill" role="search" (submit)="search($event)">
         <mat-icon aria-hidden="true">search</mat-icon>
         <input type="search" [formControl]="q" placeholder="Search jobs" aria-label="Search jobs" />
       </form>
     }
     <span class="sp"></span>
-    <button mat-icon-button type="button" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Use light theme' : 'Use dark theme'" [matTooltip]="theme.isDark() ? 'Use light theme' : 'Use dark theme'">
+    <button mat-icon-button class="icon-disc" type="button" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Use light theme' : 'Use dark theme'" [matTooltip]="theme.isDark() ? 'Use light theme' : 'Use dark theme'">
       <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
-    <a mat-icon-button routerLink="/notifications" [attr.aria-label]="count.unread() ? count.unread() + ' unread notifications' : 'Notifications'" matTooltip="Notifications">
+    <a mat-icon-button class="icon-disc" routerLink="/notifications" [attr.aria-label]="count.unread() ? count.unread() + ' unread notifications' : 'Notifications'" matTooltip="Notifications">
       <mat-icon [matBadge]="count.unread() || null" matBadgeSize="small" aria-hidden="false">notifications</mat-icon>
     </a>
-    <button mat-icon-button type="button" [matMenuTriggerFor]="account" aria-label="Account menu"><span class="avatar" aria-hidden="true">{{ initials() }}</span></button>
+    <button class="avatar-btn" type="button" [matMenuTriggerFor]="account" aria-label="Account menu"><span class="avatar" aria-hidden="true">{{ initials() }}</span></button>
     <mat-menu #account="matMenu">
       <div class="who"><div class="strong truncate">{{ auth.user()?.fullName }}</div><div class="muted xs truncate">{{ auth.user()?.email }}</div></div>
       <a mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon>Profile and settings</a>

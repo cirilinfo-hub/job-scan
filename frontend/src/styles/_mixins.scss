@@ -1,0 +1,22 @@
+@use 'variables' as v;
+
+@mixin mobile { @media (max-width: v.$bp-mobile) { @content; } }
+@mixin tablet-down { @media (max-width: v.$bp-tablet) { @content; } }
+@mixin desktop-up { @media (min-width: #{v.$bp-tablet + 1}) { @content; } }
+
+@mixin focus-ring($offset: 2px) { outline: 2px solid var(--focus-ring); outline-offset: $offset; }
+
+// Tiles and buttons rise slightly on hover. Reduced-motion users keep the colour change only.
+@mixin lift($px: 1px) {
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  &:hover { transform: translateY(-$px); }
+  @media (prefers-reduced-motion: reduce) { &:hover { transform: none; } }
+}
+
+@mixin text-style($size, $line, $weight, $tracking: normal) {
+  font-size: $size; line-height: $line; font-weight: $weight; letter-spacing: $tracking;
+}
+
+// Utilities must win over a component's own scoped rules, which carry an attribute selector.
+// Repeating the class raises specificity without !important.
+@mixin utility($name) { .#{$name}.#{$name}.#{$name} { @content; } }

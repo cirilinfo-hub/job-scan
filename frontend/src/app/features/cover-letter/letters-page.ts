@@ -16,7 +16,7 @@ import { UI } from '../../shared/ui';
     @if (ai.available() === false) { <app-ai-notice text="You can still create a fill-in draft built from your resume, clearly marked as a template." /> }
     <div class="grid split">
       <form class="card" [formGroup]="form" (ngSubmit)="create(ai.available() ? 'ai' : 'template')">
-        <h2 style="margin-bottom:12px">New cover letter</h2>
+        <h2 class="mb-3">New cover letter</h2>
         <div class="form-grid">
           <mat-form-field appearance="outline"><mat-label>Resume</mat-label><mat-select formControlName="resumeVersionId">@for (r of resumes(); track r.id) { <mat-option [value]="r.current_version_id">{{ r.title }}</mat-option> }</mat-select><mat-error>Choose a resume.</mat-error></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Writing style</mat-label><mat-select formControlName="tone"><mat-option value="professional">Professional</mat-option><mat-option value="confident">Confident</mat-option><mat-option value="warm">Warm</mat-option><mat-option value="concise">Concise</mat-option></mat-select></mat-form-field>
@@ -31,10 +31,10 @@ import { UI } from '../../shared/ui';
         </div>
       </form>
       <section class="card">
-        <h2 style="margin-bottom:8px">Your letters</h2>
+        <h2 class="mb-2">Your letters</h2>
         <div class="list">
           @for (l of items(); track l.id) {
-            <div class="list-item"><a class="grow" style="color:inherit; min-width:0" [routerLink]="['/cover-letters', l.id]"><div class="li-title truncate">{{ l.company }}</div><div class="muted xs truncate">{{ l.job_title }} · {{ l.updated_at | date: 'mediumDate' }}</div></a>
+            <div class="list-item"><a class="grow inherit min-w-0" [routerLink]="['/cover-letters', l.id]"><div class="li-title truncate">{{ l.company }}</div><div class="muted xs truncate">{{ l.job_title }} · {{ l.updated_at | date: 'mediumDate' }}</div></a>
               <app-status [status]="l.latest_source" /><button mat-icon-button type="button" [attr.aria-label]="'Delete letter for ' + l.company" (click)="remove(l)"><mat-icon>delete_outline</mat-icon></button></div>
           } @empty { <app-empty icon="mail" title="No letters yet" /> }
         </div>

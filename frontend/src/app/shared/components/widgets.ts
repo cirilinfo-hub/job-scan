@@ -8,13 +8,16 @@ export const scoreWord = (s: number) => (s >= 75 ? 'Strong' : s >= 50 ? 'Moderat
 
 @Component({
   selector: 'app-stat-card', imports: [MatIconModule, RouterLink], changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `.s { display: flex; flex-direction: column; gap: 4px; height: 100%; color: inherit; }
+  styles: `:host { display: block; height: 100%; }
+    .s { display: flex; flex-direction: column; gap: var(--space-2); height: 100%; color: inherit; padding: var(--space-5); }
     a.s:hover { text-decoration: none; } a.s:hover .v { color: var(--accent); }
-    .t { display: flex; align-items: center; justify-content: space-between; color: var(--text-2); font-size: 13px; gap: 8px; }
-    .t .material-icons { font-size: 18px; } .v { font-size: 28px; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }`,
-  template: `<div class="card" style="height:100%">
+    .t { display: flex; align-items: center; justify-content: space-between; color: var(--text-2); font-size: 13px; font-weight: 500; gap: var(--space-2); }
+    .ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); color: var(--text); flex: none; }
+    .ic .material-icons { font-size: 18px; width: 18px; height: 18px; }
+    .v { font-size: 36px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin-top: var(--space-2); transition: color var(--dur) var(--ease); }`,
+  template: `<div class="card card-tight h-full">
     <a class="s" [routerLink]="link()">
-      <span class="t">{{ label() }} <mat-icon aria-hidden="true">{{ icon() }}</mat-icon></span>
+      <span class="t">{{ label() }} <span class="ic"><mat-icon aria-hidden="true">{{ icon() }}</mat-icon></span></span>
       <span class="v">{{ value() ?? '–' }}</span>
       @if (hint()) { <span class="muted xs">{{ hint() }}</span> }
     </a></div>`,
@@ -28,7 +31,7 @@ export class StatCard {
   styles: `:host { display: inline-flex; } svg { display: block; transform: rotate(-90deg); }
     .wrap { position: relative; display: inline-grid; place-items: center; }
     .n { position: absolute; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .track { stroke: var(--surface-2); } .success { stroke: var(--success); } .warning { stroke: var(--warning); } .danger { stroke: var(--danger); }`,
+    .track { stroke: var(--surface-2); } .n { color: var(--text); letter-spacing: -0.02em; } .success { stroke: var(--success); } .warning { stroke: var(--warning); } .danger { stroke: var(--danger); }`,
   template: `<div class="wrap" role="img" [attr.aria-label]="label() + ': ' + (value() ?? 'not available') + ' out of 100'">
     <svg [attr.width]="size()" [attr.height]="size()" viewBox="0 0 36 36" aria-hidden="true">
       <circle class="track" cx="18" cy="18" r="15.5" fill="none" stroke-width="3.5" />
@@ -44,7 +47,7 @@ export class ScoreIndicator {
 
 @Component({
   selector: 'app-progress', changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `.bar { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; } .fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width .18s ease-out; }
+  styles: `.bar { height: 8px; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; } .fill { height: 100%; border-radius: var(--radius-pill); background: var(--accent); transition: width var(--dur) var(--ease); }
     .fill.success { background: var(--success); } .fill.warning { background: var(--warning); } .fill.danger { background: var(--danger); }`,
   template: `<div class="bar" role="progressbar" [attr.aria-valuenow]="value()" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="label()"><div class="fill" [class]="tone()" [style.width.%]="value()"></div></div>`,
 })
@@ -71,10 +74,11 @@ export const stageLabel = (s: string) => STATUS[s]?.label ?? s;
 
 @Component({
   selector: 'app-empty', imports: [MatIconModule, MatButtonModule, RouterLink], changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `.e { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 32px 16px; }
-    .e .material-icons { font-size: 32px; height: 32px; width: 32px; color: var(--text-2); } .e p { color: var(--text-2); max-width: 420px; }`,
+  styles: `.e { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-3); padding: var(--space-8) var(--space-4); }
+    .ei { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); margin-bottom: var(--space-1); }
+    .ei .material-icons { font-size: 30px; height: 30px; width: 30px; } .e p { color: var(--text-2); max-width: 420px; }`,
   template: `<div class="e">
-    <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+    <span class="ei"><mat-icon aria-hidden="true">{{ icon() }}</mat-icon></span>
     <h2>{{ title() }}</h2>
     @if (text()) { <p>{{ text() }}</p> }
     @if (actionLink()) { <a mat-flat-button [routerLink]="actionLink()">{{ actionLabel() }}</a> }
@@ -87,7 +91,7 @@ export class EmptyState {
 
 @Component({
   selector: 'app-skeleton', changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `.sk { border-radius: 8px; background: var(--surface-2); animation: p 1.4s ease-in-out infinite; } @keyframes p { 50% { opacity: .55; } }`,
+  styles: `.sk { border-radius: var(--radius-lg); background: var(--surface-2); animation: p 1.4s ease-in-out infinite; } @keyframes p { 50% { opacity: .55; } }`,
   template: `<div class="grid" [style.grid-template-columns]="'repeat(auto-fill, minmax(min(100%,' + min() + 'px), 1fr))'" role="status" aria-label="Loading">
     @for (i of items(); track i) { <div class="sk" [style.height.px]="height()"></div> }
   </div>`,

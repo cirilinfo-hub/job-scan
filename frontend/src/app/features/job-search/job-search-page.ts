@@ -30,7 +30,7 @@ type Key = (typeof GROUPS)[number]['key'];
       <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Job title</mat-label><input matInput formControlName="title" /></mat-form-field>
       <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Company</mat-label><input matInput formControlName="company" /></mat-form-field>
       <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Location</mat-label><input matInput formControlName="location" /></mat-form-field>
-      <div class="row" style="align-items:center"><button mat-flat-button type="submit">Search</button><button mat-button type="button" (click)="clear()">Clear</button></div>
+      <div class="row items-center"><button mat-flat-button type="submit">Search</button><button mat-button type="button" (click)="clear()">Clear</button></div>
     </form>
     <div class="layout">
       <aside class="card" aria-label="Filters">
@@ -40,18 +40,18 @@ type Key = (typeof GROUPS)[number]['key'];
             @for (o of g.options; track o[0]) { <mat-checkbox [checked]="selected()[g.key].includes(o[0])" (change)="toggle(g.key, o[0], $event)">{{ o[1] }}</mat-checkbox> }
           </div>
         }
-        <form [formGroup]="extra" (ngSubmit)="search(1)" class="stack-sm" style="margin-top:12px">
+        <form [formGroup]="extra" (ngSubmit)="search(1)" class="stack-sm mt-3">
           <mat-form-field appearance="outline"><mat-label>Posted within</mat-label><mat-select formControlName="postedWithinDays" (selectionChange)="search(1)"><mat-option [value]="null">Any time</mat-option><mat-option [value]="1">24 hours</mat-option><mat-option [value]="7">7 days</mat-option><mat-option [value]="30">30 days</mat-option></mat-select></mat-form-field>
           <mat-form-field appearance="outline"><mat-label>Max years required</mat-label><input matInput type="number" min="0" formControlName="maxYears" /></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Minimum salary</mat-label><input matInput type="number" min="0" formControlName="minSalary" /><mat-hint>Hides jobs with no listed salary</mat-hint></mat-form-field>
-          <mat-form-field appearance="outline" style="margin-top:8px"><mat-label>Minimum match score</mat-label><input matInput type="number" min="0" max="100" formControlName="minScore" /></mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="mb-4"><mat-label>Minimum salary</mat-label><input matInput type="number" min="0" formControlName="minSalary" /><mat-hint>Hides jobs with no listed salary</mat-hint></mat-form-field>
+          <mat-form-field class="mt-2" appearance="outline"><mat-label>Minimum match score</mat-label><input matInput type="number" min="0" max="100" formControlName="minScore" /></mat-form-field>
           <button mat-stroked-button type="submit">Apply filters</button>
         </form>
       </aside>
       <div class="stack">
         <div class="row between">
           <span class="muted small" role="status">{{ meta()?.total ?? 0 | number }} job{{ meta()?.total === 1 ? '' : 's' }}</span>
-          <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:190px"><mat-label>Sort by</mat-label><mat-select [value]="sort()" (selectionChange)="sort.set($event.value); search(1)"><mat-option value="recent">Most recent</mat-option><mat-option value="match">Best match</mat-option><mat-option value="salary">Highest salary</mat-option></mat-select></mat-form-field>
+          <mat-form-field class="w-190" appearance="outline" subscriptSizing="dynamic"><mat-label>Sort by</mat-label><mat-select [value]="sort()" (selectionChange)="sort.set($event.value); search(1)"><mat-option value="recent">Most recent</mat-option><mat-option value="match">Best match</mat-option><mat-option value="salary">Highest salary</mat-option></mat-select></mat-form-field>
         </div>
         @if (error()) { <app-error [message]="error()" (retry)="search(page())" /> }
         @if (loading()) { <app-skeleton [count]="6" [height]="200" [min]="300" /> }
@@ -59,7 +59,7 @@ type Key = (typeof GROUPS)[number]['key'];
           <div class="grid g3">
             @for (j of jobs(); track j.id) { <app-job-card [job]="j" (toggleSave)="toggleSave($event)" /> }
             @empty {
-              <div class="card" style="grid-column:1/-1">
+              <div class="card span-all">
                 @if (filtered()) { <app-empty icon="search_off" title="No jobs match these filters" text="Try removing a filter or using broader terms." /> }
                 @else { <app-empty icon="cloud_off" title="No job listings yet" text="An administrator needs to enable and sync a job source in the admin portal." /> }
               </div>

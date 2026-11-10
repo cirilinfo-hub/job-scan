@@ -1,0 +1,86 @@
+// Colour tokens, from the reference design system (navy ink, electric blue, one warm yellow and a
+// mint accent on a softly lit grey). Components use the semantic names (--bg, --surface, --text,
+// --accent and so on), never the raw palette, so a theme change happens here only.
+//
+// Contrast notes (WCAG): --text on --bg/--surface ≥ 15:1; --text-2 ≥ 7:1; --accent text ≥ 4.7:1 on
+// --surface and --accent-soft in both themes; --border-strong (control borders) ≥ 3:1.
+
+@mixin light-palette {
+  // Reference palette
+  --navy-900: #0e1240;
+  --navy-700: #141b6b;
+  --blue-600: #1660e0;
+  --cobalt-800: #0b3a8c;
+  --accent-yellow: #ffd23f;
+  --accent-mint: #3cc79b;
+  --surface-000: #ffffff;
+  --surface-100: #f1f2f5;
+  --surface-200: #e6e8ee;
+  --ink-muted: #4a4f6e;
+  --border-subtle: #d5d8e2;
+  --border-strong: #6e7390;
+  --on-brand: #ffffff;
+  --on-yellow: #0e1240;
+  --focus-ring: #1660e0;
+
+  // Semantic roles
+  --bg: var(--surface-100);
+  --surface: var(--surface-000);
+  --surface-2: var(--surface-200);
+  --border: var(--border-subtle);
+  --text: var(--navy-900);
+  --text-2: var(--ink-muted);
+  --primary: var(--navy-700);          // primary buttons, active navigation
+  --on-primary: var(--on-brand);
+  --accent: var(--blue-600);           // links, selected states, progress
+  --on-accent: #ffffff;
+  --accent-soft: #e3ecfc;
+  --chart-1: var(--blue-600);
+
+  // Status. success and danger come from the reference; warning is an addition the app needs for
+  // states like "Assessment" and "Pending", tuned to the same contrast rules.
+  --success: #13805a;  --success-soft: #dcf5ec;
+  --warning: #8a5300;  --warning-soft: #fff1c7;
+  --danger: #c2362f;   --danger-soft: #fbe7e5;
+  --info: var(--blue-600); --info-soft: var(--accent-soft);
+
+  --shadow: 0 1px 2px rgb(14 18 64 / 0.06), 0 8px 24px rgb(14 18 64 / 0.08);
+  --shadow-lg: 0 2px 4px rgb(14 18 64 / 0.08), 0 24px 48px rgb(14 18 64 / 0.14);
+  --scrim: rgb(14 18 64 / 0.45);
+}
+
+@mixin dark-palette {
+  color-scheme: dark;
+  --navy-900: #f2f4fb;
+  --navy-700: #2a33a0;
+  --blue-600: #2f6fe8;
+  --cobalt-800: #0b2a66;
+  --accent-mint: #45d3a6;
+  --surface-000: #171b30;
+  --surface-100: #0d1020;
+  --surface-200: #22273f;
+  --ink-muted: #a7adc8;
+  --border-subtle: #2c3150;
+  --border-strong: #6b7294;
+  --focus-ring: #7fb2ff;
+
+  // Blue-600 is too dark to read as text on the dark surfaces, so links and selection use the
+  // lighter focus blue with navy text on top.
+  --accent: #7fb2ff;
+  --on-accent: #0e1240;
+  --accent-soft: #1b2a55;
+  --chart-1: #4f86ee;
+
+  --success: #45d3a6;  --success-soft: #12352c;
+  --warning: #f3c54b;  --warning-soft: #3a3015;
+  --danger: #ff8a80;   --danger-soft: #3a1c22;
+  --info: var(--accent); --info-soft: var(--accent-soft);
+
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 0.5), 0 24px 48px rgb(0 0 0 / 0.5);
+  --scrim: rgb(0 0 0 / 0.6);
+}
+
+:root { color-scheme: light; @include light-palette; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { @include dark-palette; } }
+:root[data-theme='dark'] { @include dark-palette; }

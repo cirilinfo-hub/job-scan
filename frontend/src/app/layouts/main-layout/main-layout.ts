@@ -9,13 +9,13 @@ import { AppHeader } from './app-header';
 import { AppSidebar } from './app-sidebar';
 import { ShellState } from './shell';
 
-export const SHELL_STYLES = `:host { display: grid; height: 100vh; height: 100dvh; grid-template-columns: auto minmax(0, 1fr); }
-  .side { width: 240px; transition: width .15s ease-out; height: 100%; min-height: 0; } .side.rail { width: 64px; }
+export const SHELL_STYLES = `:host { display: grid; height: 100vh; height: 100dvh; grid-template-columns: auto minmax(0, 1fr); background: var(--bg); }
+  .side { width: var(--sidebar-w); transition: width var(--dur) var(--ease); height: 100%; min-height: 0; } .side.rail { width: var(--rail-w); }
   .main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
   main { flex: 1 1 auto; overflow: auto; min-height: 0; }
-  .scrim { position: fixed; inset: 0; background: rgb(0 0 0 / .4); z-index: 40; }
+  .scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 40; }
   @media (max-width: 767px) { :host { grid-template-columns: minmax(0, 1fr); }
-    .side, .side.rail { position: fixed; z-index: 50; left: 0; top: 0; bottom: 0; width: 260px; transform: translateX(-100%); transition: transform .15s ease-out; box-shadow: var(--shadow-lg); visibility: hidden; }
+    .side, .side.rail { position: fixed; z-index: 50; left: 0; top: 0; bottom: 0; width: 272px; transform: translateX(-100%); transition: transform var(--dur) var(--ease); box-shadow: var(--shadow-lg); visibility: hidden; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; overflow: hidden; }
     .side.open { transform: none; visibility: visible; } }`;
 
 /** DashboardLayout: the workspace shell for job seekers. */
@@ -27,7 +27,7 @@ export const SHELL_STYLES = `:host { display: grid; height: 100vh; height: 100dv
     @if (shell.isSmall() && shell.drawerOpen()) { <div class="scrim" (click)="shell.drawerOpen.set(false)" aria-hidden="true"></div> }
     <div class="main">
       <app-header (menu)="shell.toggle()" />
-      @if (config.config().announcement; as note) { <div class="notice info" style="border-radius:0" role="status">{{ note }}</div> }
+      @if (config.config().announcement; as note) { <div class="notice info notice-bar" role="status">{{ note }}</div> }
       <main id="content"><router-outlet /></main>
     </div>`,
 })

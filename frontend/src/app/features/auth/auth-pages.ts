@@ -18,7 +18,7 @@ const PW_HINT = 'At least 10 characters, with a letter and a number.';
       <mat-form-field appearance="outline"><mat-label>Email</mat-label><input matInput type="email" autocomplete="email" formControlName="email" /><mat-error>Enter a valid email address.</mat-error></mat-form-field>
       <mat-form-field appearance="outline"><mat-label>Password</mat-label><input matInput type="password" autocomplete="current-password" formControlName="password" /><mat-error>Enter your password.</mat-error></mat-form-field>
     </div>
-    <button mat-flat-button type="submit" [disabled]="busy()">{{ busy() ? 'Signing in...' : 'Sign in' }}</button>
+    <button mat-flat-button class="btn-accent btn-lg" type="submit" [disabled]="busy()">{{ busy() ? 'Signing in...' : 'Sign in' }}</button>
     <div class="row between small"><a routerLink="/forgot-password">Forgot password?</a>@if (config.enabled('registration')) { <a routerLink="/register">Create an account</a> }</div>
   </form>`,
 })
@@ -50,7 +50,7 @@ export class LoginPage {
       <mat-form-field appearance="outline"><mat-label>Email</mat-label><input matInput type="email" autocomplete="email" formControlName="email" /><mat-error>Enter a valid email address.</mat-error></mat-form-field>
       <mat-form-field appearance="outline"><mat-label>Password</mat-label><input matInput type="password" autocomplete="new-password" formControlName="password" /><mat-hint>{{ hint }}</mat-hint><mat-error>{{ hint }}</mat-error></mat-form-field>
     </div>
-    <button mat-flat-button type="submit" [disabled]="busy() || !config.enabled('registration')">{{ busy() ? 'Creating account...' : 'Create account' }}</button>
+    <button mat-flat-button class="btn-accent btn-lg" type="submit" [disabled]="busy() || !config.enabled('registration')">{{ busy() ? 'Creating account...' : 'Create account' }}</button>
     <div class="small">Already registered? <a routerLink="/login">Sign in</a></div>
   </form>`,
 })
@@ -77,7 +77,7 @@ export class RegisterPage {
     @if (done()) { <div class="notice info" role="status">{{ done() }}</div> }
     @if (error()) { <div class="notice danger" role="alert">{{ error() }}</div> }
     <mat-form-field appearance="outline"><mat-label>Email</mat-label><input matInput type="email" autocomplete="email" formControlName="email" /><mat-error>Enter a valid email address.</mat-error></mat-form-field>
-    <button mat-flat-button type="submit" [disabled]="busy()">Send reset link</button>
+    <button mat-flat-button class="btn-accent btn-lg" type="submit" [disabled]="busy()">Send reset link</button>
     <a class="small" routerLink="/login">Back to sign in</a>
   </form>`,
 })
@@ -102,7 +102,7 @@ export class ForgotPage {
     @if (!token()) { <div class="notice danger" role="alert">This link is missing its token. <a routerLink="/forgot-password">Request a new link</a>.</div> }
     @if (error()) { <div class="notice danger" role="alert">{{ error() }}</div> }
     <mat-form-field appearance="outline"><mat-label>New password</mat-label><input matInput type="password" autocomplete="new-password" formControlName="password" /><mat-hint>{{ hint }}</mat-hint><mat-error>{{ hint }}</mat-error></mat-form-field>
-    <button mat-flat-button type="submit" [disabled]="busy() || !token()">Reset password</button>
+    <button mat-flat-button class="btn-accent btn-lg" type="submit" [disabled]="busy() || !token()">Reset password</button>
   </form>`,
 })
 export class ResetPage {

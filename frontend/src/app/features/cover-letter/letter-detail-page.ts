@@ -30,7 +30,7 @@ import { UI } from '../../shared/ui';
           <button mat-flat-button type="button" [disabled]="body.pristine || body.invalid" (click)="save()">Save as new version</button>
         </section>
         <section class="card">
-          <h2 style="margin-bottom:8px">Version history</h2>
+          <h2 class="mb-2">Version history</h2>
           <div class="list">
             @for (v of l.versions; track v.id) {
               <div class="list-item small"><div class="grow"><div class="li-title">Version {{ v.version_no }}</div><div class="muted xs">{{ v.created_at | date: 'MMM d, h:mm a' }}</div></div><app-status [status]="v.source" /><button mat-button type="button" (click)="view(v)">Open</button></div>
