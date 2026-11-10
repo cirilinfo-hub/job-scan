@@ -43,6 +43,7 @@ const schema = z.object({
   SEED_ADMIN_EMAIL: optionalStr,
   SEED_ADMIN_PASSWORD: optionalStr,
   LOG_LEVEL: z.string().default('info'),
+  RATE_LIMIT_API_PER_MIN: z.coerce.number().int().min(10).default(1200),
   SCHEDULER_ENABLED: bool(true),
   RETENTION_DAYS_DELETED: z.coerce.number().default(30),
   RETENTION_DAYS_LOGS: z.coerce.number().default(180),
@@ -54,11 +55,15 @@ if (!parsed.success) {
   throw new Error(`Invalid environment configuration:\n${lines}`);
 }
 
+// src/config and dist/config are both two levels below the backend folder.
+const BACKEND_ROOT = path.resolve(__dirname, '../..');
+
 export const env = {
   ...parsed.data,
   isProd: parsed.data.NODE_ENV === 'production',
   isTest: parsed.data.NODE_ENV === 'test',
   corsOrigins: parsed.data.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean),
-  storageDir: path.resolve(parsed.data.STORAGE_DIR),
+  storageDir: path.resolve(BACKEND_ROOT, parsed.data.STORAGE_DIR),
+  frontendDist: path.resolve(BACKEND_ROOT, parsed.data.FRONTEND_DIST),
   maxUploadBytes: parsed.data.MAX_UPLOAD_MB * 1024 * 1024,
 };

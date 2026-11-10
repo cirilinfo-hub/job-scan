@@ -29,7 +29,7 @@ export const planSchema = z.object({
 export const assignPlanSchema = z.object({ planId: z.number().int().positive(), endsAt: z.coerce.date().nullable().optional() });
 export const flagsSchema = z.record(z.string(), z.boolean());
 export const aiConfigSchema = z.object({ model: z.string().trim().max(80).nullable().optional() });
-export const settingsSchema = z.object({ appName: z.string().trim().max(60).optional(), supportEmail: z.string().trim().max(254).optional(), allowRegistration: z.boolean().optional(), announcement: z.string().trim().max(300).optional() });
+export const settingsSchema = z.object({ supportEmail: z.string().trim().max(254).optional(), announcement: z.string().trim().max(300).optional() });
 export const logsQuery = z.object({
   level: z.enum(['info', 'warn', 'error']).optional(), action: z.string().max(80).optional(),
   page: z.coerce.number().int().min(1).default(1), pageSize: z.coerce.number().int().min(1).max(100).default(30),

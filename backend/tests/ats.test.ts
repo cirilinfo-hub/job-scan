@@ -73,6 +73,42 @@ describe('term matching', () => {
   });
 });
 
+describe('ambiguous skill names', () => {
+  const go = skill(20, 'Go', 'hard', ['golang']);
+  const r = skill(21, 'R', 'hard', ['r programming']);
+  const excel = skill(22, 'Excel', 'tool', ['microsoft excel']);
+  const js = skill(23, 'JavaScript', 'hard', ['ecmascript']);
+  const count = (text: string, s: SkillEntry) => s.terms.reduce((n, t) => n + countTerm(normalize(text), t), 0);
+  it('recognises the skill when written as one', () => {
+    expect(count('Skills: Go, Python', go)).toBe(1);
+    expect(count('built services in golang', go)).toBe(1);
+    expect(count('Tools: R, SQL', r)).toBe(1);
+    expect(count('Used R programming daily', r)).toBeGreaterThan(0);
+    expect(count('Advanced Excel and SQL', excel)).toBe(1);
+  });
+  it('ignores everyday uses of the same word', () => {
+    expect(count('We go to market fast and go beyond', go)).toBe(0);
+    expect(count('Go to market strategy', go)).toBe(0);
+    expect(count('Led R&D for new products', r)).toBe(0);
+    expect(count('You will excel at planning', excel)).toBe(0);
+    expect(count('Excel at communication', excel)).toBe(0);
+  });
+  it('does not find a skill inside another name', () => {
+    expect(count('Node.js services', js)).toBe(0);
+    expect(countTerm(normalize('the rest of the team'), 'rest api')).toBe(0);
+  });
+  it('keeps common words out of keywords', () => {
+    const k = extractKeywords("Nice to have a bachelor's degree. Nice degree. Payments payments.", []).map((x) => x.term);
+    expect(k).toContain('payments');
+    expect(k.join(' ')).not.toMatch(/nice|degree|bachelor/);
+  });
+  it('does not repeat words from a known multi-word skill', () => {
+    const k = extractKeywords('REST APIs and more APIs for payments', ['rest apis']).map((x) => x.term);
+    expect(k).not.toContain('apis');
+    expect(k).toContain('payments');
+  });
+});
+
 describe('experience parsing', () => {
   it('reads required years only near an experience claim', () => {
     expect(requiredYears('5+ years of experience in sales')).toBe(5);

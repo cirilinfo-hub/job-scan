@@ -33,9 +33,12 @@ const summarize = (text: string) => {
   return flat.length <= 280 ? flat : `${flat.slice(0, 277).replace(/\s+\S*$/, '')}...`;
 };
 
+/** Third-party data: only web links may reach the page, whatever a source sends. */
+const webUrl = (u: string | null | undefined) => (u && /^https?:\/\//i.test(u) ? u.slice(0, 1000) : null);
+
 export async function ingestJob(sourceId: number, j: NormalizedJob, opts: { isDemo?: boolean } = {}): Promise<number> {
   const catalog = await catalogService.skills();
-  const companyId = await jobRepo.upsertCompany(j.company || 'Unknown company', j.companyLogo ?? null, j.companyWebsite ?? null);
+  const companyId = await jobRepo.upsertCompany(j.company || 'Unknown company', webUrl(j.companyLogo), webUrl(j.companyWebsite));
   const categoryId = j.category ? await jobRepo.upsertCategory(j.category) : null;
   const minYears = requiredYears(j.description);
   const res = await exec(
@@ -48,7 +51,7 @@ export async function ingestJob(sourceId: number, j: NormalizedJob, opts: { isDe
        apply_url = VALUES(apply_url), source_url = VALUES(source_url), posted_at = VALUES(posted_at), is_active = 1`,
     [sourceId, j.externalId.slice(0, 190), companyId, categoryId, j.title.slice(0, 200), j.description, summarize(j.description), j.location?.slice(0, 150) ?? null,
       inferWorkMode(j), j.employmentType ?? 'unknown', inferLevel(j.title, minYears), minYears,
-      j.salaryMin ?? null, j.salaryMax ?? null, j.salaryCurrency ?? null, j.applyUrl?.slice(0, 1000) ?? null, j.sourceUrl?.slice(0, 1000) ?? null,
+      j.salaryMin ?? null, j.salaryMax ?? null, j.salaryCurrency ?? null, webUrl(j.applyUrl), webUrl(j.sourceUrl),
       opts.isDemo ? 1 : 0, j.postedAt ?? new Date()]);
   const skills = findJobSkills(`${j.title}\n${j.description}`, catalog).slice(0, 30).map((f) => ({ id: f.skill.id, required: f.required }));
   await jobRepo.replaceSkills(res.insertId, skills);

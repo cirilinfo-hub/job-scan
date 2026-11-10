@@ -10,6 +10,7 @@ export const openApiSpec = {
   servers: [{ url: '/api/v1' }],
   components: { securitySchemes: { bearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } } },
   paths: {
+    '/config': { get: pub('Public feature flags, announcement and support email', 'Platform') },
     '/auth/register': { post: pub('Create an account', 'Auth') },
     '/auth/login': { post: pub('Sign in; sets the refresh cookie', 'Auth') },
     '/auth/refresh': { post: pub('Rotate the session. Requires X-Requested-With: rolewise', 'Auth') },

@@ -62,7 +62,7 @@ Single accent (deep teal-green), neutral slate surfaces, status colours used onl
 | 768–1199 px | 64 px rail | 2-column grids; report panes stack |
 | < 768 px | Off-canvas drawer behind a header menu button | 1 column; 16 px gutter; board scrolls horizontally inside its own container; tables scroll inside their own container |
 
-The page itself never scrolls horizontally. Touch targets are at least 40 px on small screens.
+The page itself never scrolls horizontally (checked by the browser tests at 375, 820 and 1440 px). Touch targets are at least 40 px on small screens.
 
 ## 4. Navigation map
 

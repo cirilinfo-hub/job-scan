@@ -1,19 +1,20 @@
 import { Router } from 'express';
 import { authController as a, userController as u } from '../controllers/auth.controller';
 import { requireAuth, requireCsrfHeader } from '../middlewares/auth';
-import { authLimiter, validateBody } from '../middlewares/common';
+import { authLimiter, requireFeature, validateBody } from '../middlewares/common';
 import * as v from '../validators/auth.validators';
 
 export const authRoutes = Router();
-authRoutes.use(authLimiter);
-authRoutes.post('/register', validateBody(v.registerSchema), a.register);
-authRoutes.post('/login', validateBody(v.loginSchema), a.login);
+// The strict limit covers only actions that guess at a password or token, or send email. Refresh and
+// logout run on every page load, so limiting them would sign out people who share an IP address.
+authRoutes.post('/register', authLimiter, requireFeature('registration'), validateBody(v.registerSchema), a.register);
+authRoutes.post('/login', authLimiter, validateBody(v.loginSchema), a.login);
 authRoutes.post('/refresh', requireCsrfHeader, a.refresh);
 authRoutes.post('/logout', requireCsrfHeader, a.logout);
-authRoutes.post('/forgot-password', validateBody(v.forgotSchema), a.forgot);
-authRoutes.post('/reset-password', validateBody(v.resetSchema), a.reset);
-authRoutes.post('/verify-email', validateBody(v.verifySchema), a.verify);
-authRoutes.post('/resend-verification', requireAuth, a.resend);
+authRoutes.post('/forgot-password', authLimiter, validateBody(v.forgotSchema), a.forgot);
+authRoutes.post('/reset-password', authLimiter, validateBody(v.resetSchema), a.reset);
+authRoutes.post('/verify-email', authLimiter, validateBody(v.verifySchema), a.verify);
+authRoutes.post('/resend-verification', authLimiter, requireAuth, a.resend);
 
 export const userRoutes = Router();
 userRoutes.use(requireAuth);

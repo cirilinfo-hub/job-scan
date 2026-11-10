@@ -9,7 +9,8 @@ import swaggerUi from 'swagger-ui-express';
 import { pool } from './config/db';
 import { env } from './config/env';
 import { openApiSpec } from './docs/openapi';
-import { apiLimiter, errorHandler, notFoundHandler } from './middlewares/common';
+import { apiLimiter, errorHandler, notFoundHandler, requireFeature } from './middlewares/common';
+import { settingsService } from './services/settings.service';
 import { adminRoutes } from './routes/admin.routes';
 import { authRoutes, userRoutes } from './routes/auth.routes';
 import { coverLetterRoutes } from './routes/cover-letter.routes';
@@ -42,7 +43,7 @@ export function createApp(): Express {
     },
     strictTransportSecurity: env.isProd,
   }));
-  app.use(cors({ origin: env.corsOrigins, credentials: true, allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'] }));
+  app.use(cors({ origin: env.corsOrigins, credentials: true, exposedHeaders: ['Content-Disposition'], allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'] }));
   app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/api/health' }, serializers: { req: (r) => ({ method: r.method, url: r.url?.split('?')[0] }), res: (r) => ({ statusCode: r.statusCode }) } }));
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
@@ -63,26 +64,31 @@ export function createApp(): Express {
 
   const v1 = express.Router();
   v1.use(apiLimiter);
+  // Public, non-sensitive settings the app needs before sign-in.
+  v1.get('/config', async (_req, res) => {
+    const s = await settingsService.get<{ supportEmail?: string; announcement?: string }>('app_settings', {});
+    res.json({ success: true, data: { features: await settingsService.get('feature_flags', {}), supportEmail: s.supportEmail ?? '', announcement: s.announcement ?? '' } });
+  });
   v1.use('/auth', authRoutes);
   v1.use('/users', userRoutes);
   v1.use('/dashboard', dashboardRoutes);
   v1.use('/resumes', resumeRoutes);
   v1.use('/resume-scanner', scannerRoutes);
   v1.use('/resume-optimizer', optimizerRoutes);
-  v1.use('/resume-builder', builderRoutes);
-  v1.use('/jobs', jobRoutes);
-  v1.use('/job-matching', matchingRoutes);
+  v1.use('/resume-builder', requireFeature('resume_builder'), builderRoutes);
+  v1.use('/jobs', requireFeature('job_search'), jobRoutes);
+  v1.use('/job-matching', requireFeature('job_search'), matchingRoutes);
   v1.use('/job-tracker', trackerRoutes);
-  v1.use('/cover-letters', coverLetterRoutes);
-  v1.use('/linkedin', linkedinRoutes);
-  v1.use('/interviews', interviewRoutes);
+  v1.use('/cover-letters', requireFeature('cover_letters'), coverLetterRoutes);
+  v1.use('/linkedin', requireFeature('linkedin'), linkedinRoutes);
+  v1.use('/interviews', requireFeature('interview_prep'), interviewRoutes);
   v1.use('/notifications', notificationRoutes);
   v1.use('/admin', adminRoutes);
   app.use('/api/v1', v1);
   app.use('/api', notFoundHandler);
 
   if (env.SERVE_FRONTEND) {
-    const dist = path.resolve(env.FRONTEND_DIST);
+    const dist = env.frontendDist;
     if (fs.existsSync(path.join(dist, 'index.html'))) {
       app.use(express.static(dist, { index: false, maxAge: '1y', immutable: true }));
       app.get(/.*/, (_req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(path.join(dist, 'index.html')); });

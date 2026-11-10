@@ -364,6 +364,13 @@ describe('jobs and matching', () => {
     jobId = await ingestJob(s!.id, { externalId: 'a1', title: 'Senior TypeScript Engineer', company: 'Globex', description: 'Requirements: 3+ years of experience with TypeScript and Angular. Kubernetes required. Fully distributed team building logistics software.', location: 'Remote', workMode: 'remote', employmentType: 'full_time', salaryMin: 100000, salaryMax: 120000, applyUrl: 'https://example.com/a1' });
     await ingestJob(s!.id, { externalId: 'a2', title: 'Pastry Chef', company: 'Bakery', description: 'Bake things every morning for hungry customers in our shop.', location: 'Paris', workMode: 'onsite', employmentType: 'part_time' });
   });
+  it('drops unsafe links from job sources', async () => {
+    const s = await one<{ id: number }>(`SELECT id FROM job_sources WHERE code = 'testsrc'`);
+    const id = await ingestJob(s!.id, { externalId: 'bad', title: 'Link Test', company: 'Evil', description: 'A job with a bad link in its data feed for testing.', applyUrl: 'javascript:alert(1)', companyLogo: 'javascript:alert(2)' });
+    const row = await one<{ apply_url: string | null }>('SELECT apply_url FROM jobs WHERE id = ?', [id]);
+    expect(row?.apply_url).toBeNull();
+    await exec('DELETE FROM jobs WHERE id = ?', [id]);
+  });
   it('re-ingests the same listing without duplicating', async () => {
     const s = await one<{ id: number }>(`SELECT id FROM job_sources WHERE code = 'testsrc'`);
     const again = await ingestJob(s!.id, { externalId: 'a1', title: 'Senior TypeScript Engineer', company: 'Globex', description: 'Requirements: 3+ years of experience with TypeScript and Angular. Kubernetes required.', location: 'Remote', workMode: 'remote', employmentType: 'full_time', salaryMin: 100000, salaryMax: 120000, applyUrl: 'https://example.com/a1' });
@@ -443,6 +450,16 @@ describe('job tracker', () => {
     await request(app).post(`${API}/job-tracker/${a.id}/move`).set(auth(token)).send({ status: 'saved', index: 2 });
     expect(await column(token, 'saved')).toEqual(['C', 'B', 'A']);
   });
+  it('counts an application that skips the Applied stage', async () => {
+    const { token } = await register();
+    const a = await add(token, 'A');
+    await request(app).post(`${API}/job-tracker/${a.id}/move`).set(auth(token)).send({ status: 'interview', index: 0 });
+    const dash = await request(app).get(`${API}/dashboard`).set(auth(token));
+    expect(dash.body.data.stats.applicationsSubmitted).toBe(1);
+    const b = await add(token, 'B');
+    await request(app).post(`${API}/job-tracker/${b.id}/move`).set(auth(token)).send({ status: 'rejected', index: 0 });
+    expect((await request(app).get(`${API}/dashboard`).set(auth(token))).body.data.stats.applicationsSubmitted).toBe(1);
+  });
   it('rejects an invalid stage', async () => {
     const { token } = await register();
     const a = await add(token, 'A');
@@ -459,6 +476,7 @@ describe('job tracker', () => {
     expect(iv.body.data[0].kind).toBe('phone');
     const dash = await request(app).get(`${API}/dashboard`).set(auth(token));
     expect(dash.body.data.upcomingInterviews[0].company).toBe('A');
+    expect(dash.body.data.stats.interviewsScheduled).toBe(1);
   });
   it("refuses another user's resume version", async () => {
     const a = await register();
@@ -611,6 +629,24 @@ describe('administration', () => {
     expect((await request(app).get(`${API}/resume-scanner/${before.body.data.id}`).set(auth(token))).body.data.rules.weights.skills).toBe(35);
     await request(app).put(`${API}/admin/scoring-rules`).set(auth(superAdmin)).send(DEFAULT_SCORING_RULES).expect(200);
     expect((await request(app).put(`${API}/admin/scoring-rules`).set(auth(superAdmin)).send({ weights: {} })).status).toBe(422);
+  });
+  it('enforces feature switches on the server and publishes them', async () => {
+    const { token } = await register();
+    await request(app).put(`${API}/admin/features`).set(auth(superAdmin)).send({ ai: true, registration: false, job_search: false, linkedin: false, interview_prep: false, cover_letters: false, resume_builder: false }).expect(200);
+    for (const p of ['/jobs', '/job-matching', '/linkedin', '/interviews/guide', '/cover-letters', '/resume-builder/templates']) {
+      const res = await request(app).get(API + p).set(auth(token));
+      expect(res.status, p).toBe(403);
+      expect(res.body.error.code).toBe('FEATURE_DISABLED');
+    }
+    expect((await request(app).post(`${API}/auth/register`).send({ email: `closed${Date.now()}@example.com`, password: PASSWORD, fullName: 'No Entry' })).status).toBe(403);
+    expect((await request(app).get(`${API}/config`)).body.data.features.job_search).toBe(false);
+    await request(app).put(`${API}/admin/features`).set(auth(superAdmin)).send({ ai: true, registration: true, job_search: true, linkedin: true, interview_prep: true, cover_letters: true, resume_builder: true }).expect(200);
+  });
+  it('publishes the announcement and support email without sign-in', async () => {
+    await request(app).put(`${API}/admin/settings`).set(auth(superAdmin)).send({ supportEmail: 'help@example.com', announcement: 'Maintenance on Friday' }).expect(200);
+    const res = await request(app).get(`${API}/config`);
+    expect(res.body.data).toMatchObject({ supportEmail: 'help@example.com', announcement: 'Maintenance on Friday' });
+    await request(app).put(`${API}/admin/settings`).set(auth(superAdmin)).send({ supportEmail: '', announcement: '' }).expect(200);
   });
   it('turning the AI feature off stops AI even when a provider exists', async () => {
     const { token } = await register();

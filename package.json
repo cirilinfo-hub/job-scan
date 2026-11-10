@@ -1,0 +1,17 @@
+{
+  "name": "rolewise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Job search and career management platform: Angular, Express and MySQL.",
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "setup": "npm ci --prefix backend && npm ci --prefix frontend",
+    "build": "npm ci --prefix backend --include=dev && npm run build --prefix backend && npm ci --prefix frontend --include=dev && npm run build --prefix frontend",
+    "start": "node backend/dist/server.js",
+    "migrate": "node backend/dist/db/migrate.js",
+    "seed": "node backend/dist/db/seed.js",
+    "test": "npm test --prefix backend && npm test --prefix frontend -- --watch=false",
+    "dev:api": "npm run dev --prefix backend",
+    "dev:web": "npm start --prefix frontend"
+  }
+}

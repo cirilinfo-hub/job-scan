@@ -18,9 +18,9 @@ export const dashboardService = {
       count('SELECT COUNT(*) c FROM jobs WHERE is_active = 1', []),
       count('SELECT COUNT(*) c FROM jobs WHERE is_active = 1 AND created_at BETWEEN ? AND ?', [range.from, range.to]),
       count('SELECT COUNT(*) c FROM saved_jobs WHERE user_id = ? AND created_at BETWEEN ? AND ?', p),
-      count(`SELECT COUNT(DISTINCT h.application_id) c FROM application_status_history h JOIN job_applications a ON a.id = h.application_id
-             WHERE a.user_id = ? AND a.deleted_at IS NULL AND h.to_status = 'applied' AND h.changed_at BETWEEN ? AND ?`, p),
-      count(`SELECT COUNT(*) c FROM interviews i JOIN job_applications a ON a.id = i.application_id WHERE a.user_id = ? AND a.deleted_at IS NULL AND i.scheduled_at BETWEEN ? AND ?`, p),
+      // applied_at is set when a card first leaves Saved, so jumping straight to Interview still counts as applying.
+      count('SELECT COUNT(*) c FROM job_applications WHERE user_id = ? AND deleted_at IS NULL AND applied_at BETWEEN ? AND ?', p),
+      count(`SELECT COUNT(*) c FROM interviews i JOIN job_applications a ON a.id = i.application_id WHERE a.user_id = ? AND a.deleted_at IS NULL AND i.created_at BETWEEN ? AND ?`, p),
       count(`SELECT COUNT(DISTINCT h.application_id) c FROM application_status_history h JOIN job_applications a ON a.id = h.application_id
              WHERE a.user_id = ? AND a.deleted_at IS NULL AND h.to_status = 'offer' AND h.changed_at BETWEEN ? AND ?`, p),
       one<{ overall_score: number; job_title: string; company: string | null; created_at: Date; id: number }>('SELECT id, overall_score, job_title, company, created_at FROM resume_scans WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT 1', [userId]),
@@ -54,9 +54,8 @@ export const dashboardService = {
   /** Applications per ISO week, with empty weeks filled in so the chart's axis stays continuous. */
   async weekly(userId: number, range: Range) {
     const rows = await query<{ wk: string; c: number }>(
-      `SELECT DATE_FORMAT(DATE_SUB(DATE(h.changed_at), INTERVAL WEEKDAY(h.changed_at) DAY), '%Y-%m-%d') wk, COUNT(DISTINCT h.application_id) c
-       FROM application_status_history h JOIN job_applications a ON a.id = h.application_id
-       WHERE a.user_id = ? AND a.deleted_at IS NULL AND h.to_status = 'applied' AND h.changed_at BETWEEN ? AND ? GROUP BY wk`, [userId, range.from, range.to]);
+      `SELECT DATE_FORMAT(DATE_SUB(DATE(applied_at), INTERVAL WEEKDAY(applied_at) DAY), '%Y-%m-%d') wk, COUNT(*) c
+       FROM job_applications WHERE user_id = ? AND deleted_at IS NULL AND applied_at BETWEEN ? AND ? GROUP BY wk`, [userId, range.from, range.to]);
     const map = new Map(rows.map((r) => [r.wk, r.c]));
     const out: { week: string; count: number }[] = [];
     const d = new Date(Date.UTC(range.from.getUTCFullYear(), range.from.getUTCMonth(), range.from.getUTCDate()));

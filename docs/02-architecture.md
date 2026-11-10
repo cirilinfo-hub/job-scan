@@ -18,6 +18,8 @@ flowchart LR
 
 Express can also serve the Angular build, so production can run as **one Node app on one origin**. This is the simplest fit for Hostinger's managed Node.js hosting, and it avoids cross-site cookies.
 
+The frontend uses Angular 21 rather than the newest release, because Angular 22 needs Node 24.15 or newer. It's zoneless, so all screen state lives in signals.
+
 ## Key decisions
 
 | Decision | Choice | Why |

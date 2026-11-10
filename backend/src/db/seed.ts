@@ -30,7 +30,7 @@ export async function seedReference(): Promise<void> {
   await put('scoring_rules', DEFAULT_SCORING_RULES, 'Weights and deductions used by the resume scanner');
   await put('feature_flags', FEATURE_FLAGS, 'Turns product features on or off');
   await put('ai_config', { model: null }, 'Optional model override; API keys live in environment variables');
-  await put('app_settings', { appName: 'Rolewise', supportEmail: '', allowRegistration: true, announcement: '' }, 'General application settings');
+  await put('app_settings', { supportEmail: '', announcement: '' }, 'General application settings');
 }
 
 /** Creates the first super admin from environment variables. It never overwrites an existing account's password. */

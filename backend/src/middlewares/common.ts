@@ -5,6 +5,7 @@ import { ZodError, ZodType } from 'zod';
 import { env } from '../config/env';
 import { AppError } from '../utils/errors';
 import { logger } from '../utils/logger';
+import { settingsService } from '../services/settings.service';
 
 /** Validates and replaces req.body; query validation is done with parseQuery so Express 5's read-only req.query is respected. */
 export const validateBody = (schema: ZodType) => (req: Request, _res: Response, next: NextFunction): void => {
@@ -13,6 +14,12 @@ export const validateBody = (schema: ZodType) => (req: Request, _res: Response, 
 };
 
 export const parseQuery = <T>(schema: ZodType<T>, req: Request): T => schema.parse(req.query);
+
+/** Blocks a whole module when an admin has turned its feature off. */
+export const requireFeature = (name: string) => async (_req: Request, _res: Response, next: NextFunction): Promise<void> => {
+  if (!(await settingsService.feature(name))) throw new AppError(403, 'FEATURE_DISABLED', 'This feature is turned off on this site.');
+  next();
+};
 
 export function notFoundHandler(req: Request, res: Response): void {
   res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: `No route for ${req.method} ${req.path}` } });
@@ -58,7 +65,8 @@ const limiter = (windowMs: number, limit: number) =>
     message: { success: false, error: { code: 'RATE_LIMITED', message: 'Too many requests. Please wait a moment and try again.' } },
   });
 
-export const apiLimiter = limiter(60_000, 300);
+// Per IP address, so set it with shared office or campus connections in mind.
+export const apiLimiter = limiter(60_000, env.RATE_LIMIT_API_PER_MIN);
 export const authLimiter = limiter(15 * 60_000, 30);
 export const aiLimiter = limiter(60_000, 15);
 export const uploadLimiter = limiter(60_000, 15);

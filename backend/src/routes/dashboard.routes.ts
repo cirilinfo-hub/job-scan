@@ -15,7 +15,8 @@ export const dashboardRoutes = Router();
 dashboardRoutes.use(requireAuth);
 dashboardRoutes.get('/', async (req, res) => {
   const p = q.parse(req.query);
-  const to = p.to ? new Date(new Date(p.to).setUTCHours(23, 59, 59, 999)) : new Date();
+  // A small margin, because MySQL rounds fractional seconds up: something saved just now can land a moment ahead.
+  const to = p.to ? new Date(new Date(p.to).setUTCHours(23, 59, 59, 999)) : new Date(Date.now() + 60_000);
   const from = p.from ?? new Date(to.getTime() - (p.days ?? 30) * 864e5);
   if (from > to) throw badRequest('The start date must be before the end date.');
   const id = currentUser(req).id;
