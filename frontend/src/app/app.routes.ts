@@ -13,6 +13,7 @@ export const routes: Routes = [
       { path: 'register', title: page('Create account'), loadComponent: () => import('./features/auth/auth-pages').then((m) => m.RegisterPage) },
       { path: 'forgot-password', title: page('Forgot password'), loadComponent: () => import('./features/auth/auth-pages').then((m) => m.ForgotPage) },
       { path: 'reset-password', title: page('Reset password'), loadComponent: () => import('./features/auth/auth-pages').then((m) => m.ResetPage) },
+      { path: '', pathMatch: 'full', redirectTo: 'login' },
     ],
   },
   { path: 'verify-email', title: page('Verify email'), loadComponent: () => import('./features/auth/verify-page').then((m) => m.VerifyPage) },
